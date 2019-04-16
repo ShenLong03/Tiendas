@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain
+{
+   public class Ventas
+    {
+        [Key]
+        public int VentaId { get; set; }
+
+     
+        public DateTime Fecha { get; set; }
+
+        public double TotalOrden { get; set; } = 0;
+
+        public int? ClienteId { get; set; }
+
+        public int? MedioPagoId { get; set; }
+       
+
+        public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
+
+       
+
+        public virtual Cliente Cliente { get; set; }
+
+
+        public virtual ICollection<Pagos> Pagos { get; set; }
+
+    }
+}

@@ -1,0 +1,66 @@
+﻿@model Domain.Productos
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Borrar</h2>
+
+<h3>Esta seguro de Borrar Este?</h3>
+<h4>Producto</h4>
+<hr />
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Tallas.Abreviatura)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tallas.Abreviatura)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Precio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Precio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cantidad)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a class="btn btn-info" href="@Url.Action("Index")">Volver a Lista</a>
+    </div>
+    }
+</div>
