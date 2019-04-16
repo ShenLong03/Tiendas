@@ -9,12 +9,9 @@
 <div>
     <table class="table-condensed">
         <tr>
-            <td>@Html.Label("Buscar Empleado", htmlAttributes: new { @class = "control-label" })</td>
+            <td>@Html.Label("Buscar Articulo", htmlAttributes: new { @class = "control-label" })</td>
             <td>@Html.Editor(" ", new { htmlAttributes = new { @id = "txtNombre", @class = "form-control" } })</td>
-            <td>
-              
-
-            </td>
+            <td></td>
         </tr>
     </table>
 
@@ -32,7 +29,15 @@
     <div class="form-horizontal">
         <h4>Ventas</h4>
         <hr />
+        <div>
 
+  
+        <table id="myDatatable" class="table table-striped table-bordered">
+          
+        </table>
+   
+
+</div>
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -76,27 +81,7 @@
 }
 
 
-<div>
 
-    <div style="margin:0 auto" class="table">
-        <table id="myDatatable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Identificación</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Email</th>
-                    <th>Editar Empleado</th>
-                    <th>Editar Usuario</th>
-                    <th>Ver</th>
-                    <th>Borrar</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-
-</div>
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -104,81 +89,23 @@
 
 @section Scripts {
     @*@Scripts.Render("~/bundles/jqueryval")*@
+  
+<script type="text/javascript" language="javascript">
 
-    <script>
-        $(document).ready(function () {
-         var oTable= $('#myDatatable').DataTable({
-                "language": {
-                    "info": "Mostrar pagina _PAGE_ de _PAGES_",
-                    "search": "Institución",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 datos    ",
-                    "infoFiltered": "(filtrar de _MAX_ datos totales)",
-                    "lengthMenu": "Mostrar _MENU_ datos",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "zeroRecords": "Ningun registro coincide",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Último",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
-                },
-                "dom": '<l<t>ip>',
-                "ajax": {
-                    "url": '@Url.Action("getarticulo")',
-                    "type": "get",
-                    "datatype": "json"
-                },
-                "columns": [
-                    { "data": "pIdentificacion", "autoWidth": true },
-                    { "data": "pNombre", "autoWidth": true },
-                    { "data": "pApellidos", "autoWidth": true },
-                    { "data": "pFechaNacimiento", "autoWidth": true },
-                    { "data": "Email", "autoWidth": true },
-                    {
-                            "data": "pEmpleadoID", "width": "240px", "render": function (data) {
-                                return '<a class="btn btn-primary" href = "@Url.Action("EditarEmpleado","empleadofullnetcom")?id=' + data + '"><span class="icon-user"></span> Datos de Empleado</a>';
-                            }
-                    },
-                    {
-                        "data": "pEmpleadoID", "width": "240px", "render": function (data) {
-                            return '<a class="btn btn-success" href = "@Url.Action("EditarUser","empleadofullnetcom")?id=' + data + '"><span class="icon-key"></span> Datos de Usuario</a>';
-                        }
-                    },
-                    {
-                        "data": "pEmpleadoID", "width": "240px", "render": function (data) {
-                            return '<a class="btn btn-info" href = "@Url.Action("details","empleadonetcom")?id=' + data + '"><span class="icon-eye"></span></a>';
-                        }
-                    },
-                     {
-                            "data": "pEmpleadoID", "width": "240px", "render": function (data) {
-                                return '<a class="btn btn-warning" href = "@Url.Action("delete","empleadonetcom")?id=' + data + '"><span class="icon-bin2"></span></a>';
-                            }
-                     }
+    $('#txtNombre').keyup(function () {
 
-                ]
-            });
+        var porId = document.getElementById("txtNombre").value;
+        var url = "@Url.Action("getarticulos", "Ventas")";
+        var data = { id: porId };
 
-            $('#txtNombre').keyup(function () {
-                //oTable.columns(0).search($('#txtNombre').val().trim());
-               
-               @Url.Action("getarticulo", "Ventas", new { id = 1 })
-               @*@Url.Action("getarticulo", "Ventas", new { id = 1 })*@
-                //oTable.draw();
+        $.get(url, data).done(function (data) {
+            $("#myDatatable").append(data);
 
-                //alert($('#txtNombre'));
-            });
+        });
 
-            @*$('#txtNombre').keyup(function () {
-                //oTable.columns(0).search($('#txtNombre').val().trim());
- @Html.ActionLink("getarticulo", "Ventas", new { id = 1 })
-              @*var url = '@Url.Action("getarticulo", "Ventas")' + '/' + id;
-                //oTable.draw();
-            });*@
+    });
 
 
-
-        })
-    </script>
+  
+</script>
 }

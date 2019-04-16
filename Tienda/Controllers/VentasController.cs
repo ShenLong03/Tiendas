@@ -23,13 +23,14 @@ namespace Tienda.Controllers
             var ventas = db.Ventas.Include(v => v.Cliente);
             return View(await ventas.ToListAsync());
         }
-        public ActionResult getarticulo(int id)
+        [HttpPost]
+        public JsonResult getarticulo(int id)
         {
 
 
             using (DataContext db = new DataContext())
             {
-                
+         
                 var vArticulo = db.Productos.Where(e => e.ProductoId==id);
                 List<Productos> vData = new List<Productos>();
                 Productos vEmpleadoView = new Productos();
@@ -48,6 +49,22 @@ namespace Tienda.Controllers
 
 
                 return Json(new { data = vData.ToList() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<PartialViewResult> getarticulos(int id)
+        {
+
+
+            using (DataContext db = new DataContext())
+            {
+
+                var vArticulo = db.Productos.Where(e => e.ProductoId == id).ToList();
+              
+               
+
+                return  PartialView("getarticulos", vArticulo);
             }
 
         }
@@ -79,7 +96,7 @@ namespace Tienda.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "VentaId,Fecha,TotalOrden,ClienteId,MedioPagoId")] Ventas ventas)
+        public async Task<ActionResult> Create(Ventas ventas)
         {
             if (ModelState.IsValid)
             {
