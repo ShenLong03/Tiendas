@@ -17,5 +17,7 @@ namespace Domain
        
       
         public virtual ICollection<Ventas> Ventas { get; set; }
+
+        public virtual ICollection<Pagos> Pagos { get; set; }
     }
 }

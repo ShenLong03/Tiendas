@@ -1,0 +1,96 @@
+﻿@model Tienda.Models.DetalleVentaViewModel
+
+@{
+    ViewBag.Title = "CreateDetalleVenta";
+}
+
+<h2>CreateDetalleVenta</h2>
+<h4>DetalleVentas</h4>
+
+
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.VentaId)
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        <select id="producto" class="ui search dropdown form-control">
+                            <option value="">Productos...</option>
+                            @foreach (var item in Model.GetProductos)
+                            {
+                                if (Model.ProductoId > 0 && Model.ProductoId == item.ProductoId)
+                                {
+                                    <option value="@item.ProductoId" selected>@item.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.ProductoId">@item.Descripcion</option>
+                                }
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                @Html.LabelFor(model => model.ProductoId, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ProductoId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descuento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Descuento, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Descuento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @*@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })*@
+                        @Html.Editor(" ", new { htmlAttributes = new { @id = "txtPrecio", @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                        @Html.ActionLink("Back to List", "Index")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $('#producto')
+            .dropdown()
+            ;
+    </script>
+}

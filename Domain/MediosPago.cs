@@ -17,6 +17,6 @@ namespace Domain
 
         public string FormaPago { get; set; }
 
-       
+        public virtual ICollection<Pagos> Pagos { get; set; }
     }
 }

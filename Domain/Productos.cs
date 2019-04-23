@@ -27,7 +27,7 @@ namespace Domain
 
         public virtual Tallas Tallas { get; set; }
 
-        public virtual DetalleVentas DetalleVentas { get; set; }
+        public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
 
     }
 }

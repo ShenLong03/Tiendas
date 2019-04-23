@@ -1,0 +1,58 @@
+﻿@model Domain.Pagos
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Pagos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cliente.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cliente.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MediosPago.FormaPago)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MediosPago.FormaPago)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ventas.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ventas.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PagoId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

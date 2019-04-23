@@ -1,21 +1,23 @@
-﻿@model Domain.Ventas
+﻿@model Tienda.Models.VentaViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
+<h4>Venta #@Model.VentaId</h4>
+<hr />
+
 
 <div>
-    <h4>Ventas</h4>
-    <hr />
+
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Cliente.Nombre)
+            @Html.DisplayNameFor(model => model.Nombre)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cliente.Nombre)
+            @Html.DisplayFor(model => model.Nombre)
         </dd>
 
         <dt>
@@ -34,13 +36,7 @@
             @Html.DisplayFor(model => model.TotalOrden)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MedioPagoId)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MedioPagoId)
-        </dd>
 
     </dl>
 </div>
@@ -48,3 +44,148 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.VentaId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<hr />
+@{
+    Html.RenderAction("CreateDetalleVentaPartial", new { id = Model.VentaId });
+}
+<hr />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Productos.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Ventas.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Precio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Descuento)
+        </th>
+        <th>Subtotal</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.DetalleVentas)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Productos.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ventas.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descuento)
+            </td>
+            <td>
+                @item.Subtotal.ToString("C2")
+            </td>
+            <td>
+                @Html.ActionLink("EditDetalleVenta", "EditDetalleVenta", new { id = item.DetalleVentasId }) |
+                @Html.ActionLink("DetailsDetalleVenta", "DetailsDetalleVenta", new { id = item.DetalleVentasId }) |
+                @Html.ActionLink("DeleteDetalleVenta", "DeleteDetalleVenta", new { id = item.DetalleVentasId })
+            </td>
+        </tr>
+    }
+
+</table>
+<hr />
+<div class="row">
+    <div class="form-horizontal col-md-5">
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalBruto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalBruto, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalNeto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalNeto, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Pago</h4>
+            </div>
+            <div class="modal-body">
+                @{Html.RenderAction("CreatePago", new { id = Model.VentaId }); }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+
+        $(document).ready(function () {
+
+            $("#ProductoId").val("");
+            $("#ProductoId").focus();
+
+             if (@Model.Mensaje != null) { alertify.alert(@Model.Mensaje); return; }
+            
+          
+        });
+
+      
+
+
+
+    </script>
+
+    <script type="text/javascript">
+        debugger;
+        $('#Monto').keyup(function () {
+            if ($('#Monto').val() == '' || $('#Monto').val() == '0') {
+
+                $('Vuelto').val(0);
+                return;
+            }
+            var vuelto = parseInt($('#Monto').val()) - parseInt($('#TotalNeto').val());
+            $('#Vuelto').val(vuelto.toString());
+        });
+    </script>
+
+}
+

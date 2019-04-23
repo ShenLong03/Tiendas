@@ -19,7 +19,8 @@ namespace Domain
 
         public int? ClienteId { get; set; }
 
-        public int? MedioPagoId { get; set; }
+        public string Nombre { get; set; }
+
        
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
@@ -30,6 +31,14 @@ namespace Domain
 
 
         public virtual ICollection<Pagos> Pagos { get; set; }
+
+        public Ventas()
+        {
+            Fecha = DateTime.Today;
+            TotalOrden = 0;
+
+
+        }
 
     }
 }

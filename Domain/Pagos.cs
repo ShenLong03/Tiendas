@@ -16,14 +16,26 @@ namespace Domain
 
         public double Monto { get; set; } = 0;
 
+        public int? ClienteId { get; set; }
 
         public int MedioPagoId { get; set; }
 
+        public int VentaId { get; set; }
+
+
         public virtual MediosPago MediosPago { get; set; }
+
+
+        public virtual Ventas Ventas { get; set; }
 
         public virtual Cliente Cliente { get; set; }
 
+        public Pagos()
+        {
+            Fecha = DateTime.Today;
+            Monto = 0;
 
+        }
 
     }
 }

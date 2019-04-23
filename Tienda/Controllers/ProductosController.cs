@@ -9,12 +9,13 @@ using System.Web;
 using System.Web.Mvc;
 using Domain;
 using Tienda.Helpers;
+using Tienda.Models;
 
 namespace Tienda.Controllers
 {
     public class ProductosController : Controller
     {
-        private DataContext db = new DataContext();
+        private DataContextLocal db = new DataContextLocal();
 
         // GET: Productos
         public async Task<ActionResult> Index()

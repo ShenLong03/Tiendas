@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Cliente.Nombre)
+            @Html.DisplayNameFor(model => model.Nombre)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Fecha)
@@ -20,16 +20,14 @@
         <th>
             @Html.DisplayNameFor(model => model.TotalOrden)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MedioPagoId)
-        </th>
+     
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Cliente.Nombre)
+            @Html.DisplayFor(modelItem => item.Nombre)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Fecha)
@@ -37,13 +35,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.TotalOrden)
         </td>
+
+        
         <td>
-            @Html.DisplayFor(modelItem => item.MedioPagoId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.VentaId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.VentaId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.VentaId })
+            @Html.ActionLink("Edit", "Edit", new { id = item.VentaId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.VentaId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.VentaId })
         </td>
     </tr>
 }
