@@ -14,7 +14,7 @@ using Tienda.Models;
 namespace Tienda.Controllers
 {
     public class VentasController : Controller
-    {
+    {//
         private DataContextLocal db = new DataContextLocal();
 
 
