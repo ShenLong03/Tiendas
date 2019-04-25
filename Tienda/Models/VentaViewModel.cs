@@ -12,6 +12,8 @@ namespace Tienda.Models
 
         public double TotalNeto { get; set; }
 
+   
         public string Mensaje { get; set; }
+
     }
 }

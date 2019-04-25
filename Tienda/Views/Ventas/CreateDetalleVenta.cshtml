@@ -10,7 +10,20 @@
 
 <hr />
 
-@using (Html.BeginForm())
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Mensaje
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+}
+
+
+@using (Html.BeginForm("BuscarArticulo", "Ventas", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -22,13 +35,15 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProductoId, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-6">
-                        <select id="producto" class="ui search dropdown form-control">
+                        <select id="ProductoId" name="ProductoId" class="ui search dropdown form-control">
                             <option value="">Productos...</option>
                             @foreach (var item in Model.GetProductos)
                             {
                                 if (Model.ProductoId > 0 && Model.ProductoId == item.ProductoId)
                                 {
                                     <option value="@item.ProductoId" selected>@item.Descripcion</option>
+
+
                                 }
                                 else
                                 {
@@ -40,13 +55,7 @@
                     </div>
                 </div>
 
-                @*<div class="form-group">
-                @Html.LabelFor(model => model.ProductoId, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("ProductoId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
+
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -67,8 +76,8 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @*@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })*@
-                        @Html.Editor(" ", new { htmlAttributes = new { @id = "txtPrecio", @class = "form-control" } })
+                        @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
+
                         @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -76,7 +85,19 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
+
+
                         <input type="submit" value="Create" class="btn btn-default" />
+                        <input type="button" id="btnAgregar" value="Agregar Articulo" class="btn btn-default" />
+
+
+
+
+
+
+
+
+
                         @Html.ActionLink("Back to List", "Index")
                     </div>
                 </div>
@@ -92,5 +113,94 @@
         $('#producto')
             .dropdown()
             ;
+        //$('#producto').change(function () {
+
+
+
+        //    });
+
+        // });
+        $('#ProductoId').change(function () {
+                  $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("BuscarPrecio", "Ventas")',
+                            dataType: 'json',
+                 data: {
+                     ProductoId: $('#ProductoId').val()
+                      },
+
+
+                      success: function (data) {
+                          debugger;
+                          $('#Precio').val(data);
+
+
+                      },
+             });
+
+
+
+         });
+
+        $('#btnAgregar').click(function () {
+
+            var productoid = $("#producto").val();
+            alert(productoid + "Segundo");
+             $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("BuscarArticulo", "Ventas")',
+                            dataType: 'json',
+                 data: {
+                     Cantidad: $('#Cantidad').val(), ProductoId: productoid,
+                     Descuento: $('#Descuento').val(), VentaId:@Model.VentaId,
+                     Precio : $('#Precio').val() },
+
+
+             });
+        });
+
+        $(function () {
+        $("#btnAgregars").click(function () {
+
+            var url = "@Url.Action("BuscarArticulo", "Ventas")";
+            var productoId = $('#producto').val();
+            var cantidad = $('#Cantidad').val();
+            var descuento = $('#Descuento').val();
+            var precio = $('#Precio').val();
+
+
+            var data = { ProductoId: productoId, Cantidad: cantidad, Descuento: descuento, Precio: precio, VentaId: @Model.VentaId };
+
+            $.post(url,data).done(function (data) {
+
+                if (data.Ok) {
+
+                    $("#div-alerta").removeClass("alert-danger").addClass("alert-success").slideDown(200);
+                } else {
+                    alert("No Cuentas Con esa Cantidad de Articulos");
+                    $("#div-alerta").removeClass("alert-success").addClass("alert-danger").slideDown(200);
+                }
+
+                $("#mensaje-alerta").html(data.Mensaje)
+
+            }).fail(manejarErrorAjax);
+
+
+        });
+
+        $("#btn-cerrar-alerta").click(function () {
+            $(this).parent().slideUp(200);
+
+
+        });
+
+        function manejarErrorAjax(err) {
+
+            console.log(err.responseText);
+        };
+   });
     </script>
+
+
+
 }

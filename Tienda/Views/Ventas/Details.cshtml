@@ -1,12 +1,26 @@
 ﻿@model Tienda.Models.VentaViewModel
 
 @{
+    /**/
+
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
 <h4>Venta #@Model.VentaId</h4>
 <hr />
+
+
+
+    @if (ViewBag.Mensaje != null) {
+<div class="alert alert-danger">
+    @ViewBag.Mensaje
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+    }
 
 
 <div>
@@ -158,33 +172,41 @@
     <script>
 
 
-        $(document).ready(function () {
+                    $(document).ready(function () {
 
-            $("#ProductoId").val("");
-            $("#ProductoId").focus();
-
-             if (@Model.Mensaje != null) { alertify.alert(@Model.Mensaje); return; }
-            
-          
-        });
+                      
+                        $("#ProductoId").val("");
+                        $("#ProductoId").focus();
 
       
+                    });
+
+        
+           
+
+
+
+        
+
+      
+   
+
 
 
 
     </script>
 
     <script type="text/javascript">
-        debugger;
-        $('#Monto').keyup(function () {
-            if ($('#Monto').val() == '' || $('#Monto').val() == '0') {
+                            debugger;
+                            $('#Monto').keyup(function () {
+                                if ($('#Monto').val() == '' || $('#Monto').val() == '0') {
 
-                $('Vuelto').val(0);
+                    $('Vuelto').val(0);
                 return;
             }
             var vuelto = parseInt($('#Monto').val()) - parseInt($('#TotalNeto').val());
             $('#Vuelto').val(vuelto.toString());
-        });
+});
     </script>
 
 }

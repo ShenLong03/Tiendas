@@ -17,57 +17,25 @@ namespace Tienda.Controllers
     {
         private DataContextLocal db = new DataContextLocal();
 
+
+        #region Ventas
+
+    
         // GET: Ventas
         public async Task<ActionResult> Index()
         {
             Ayudas.CheckMediosPagos();
-            var ventas = db.Ventas.Include(v => v.Cliente);
+            var ventas = db.Ventas.Include(v => v.Cliente).OrderBy(q=>q.Fecha);
             return View(await ventas.ToListAsync());
         }
-        [HttpPost]
-        public JsonResult getarticulo(int id)
-        {
+     
+      
 
+       
 
-          
-         
-                var vArticulo = db.Productos.Where(e => e.ProductoId==id);
-                List<Productos> vData = new List<Productos>();
-                Productos vEmpleadoView = new Productos();
-                foreach (var item in vArticulo)
-                {
-                    vEmpleadoView = new Productos()
-                    {
-                        CodigoId = item.CodigoId,
-                        Descripcion = item.Descripcion,
-                        Precio = item.Precio,
-                      
-                    };
-                    vData.Add(vEmpleadoView);
-                }
-
-
-
-                return Json(new { data = vData.ToList() }, JsonRequestBehavior.AllowGet);
-            
-
-        }
-
-        public  JsonResult getarticulos(int id)
-        {
-
-
-          
-                var vArticulo = db.Productos.Where(e => e.CodigoId == id).ToList();
-              
-               
-
-                return Json(new { data = vArticulo.ToList() }, JsonRequestBehavior.AllowGet);
-         
-
-        }
+        
         // GET: Ventas/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id,string Mensaje)
         {
             if (id == null)
             {
@@ -89,7 +57,7 @@ namespace Tienda.Controllers
 
             db.Entry(venta).State = EntityState.Modified;
             db.SaveChanges();
-
+            ViewBag.Mensaje = Mensaje;
             return View(view);
         }
 
@@ -128,40 +96,25 @@ namespace Tienda.Controllers
 
         }
 
-
-
-
-        [HttpPost, ActionName("Details")]
-        public async Task<ActionResult> AgregarProducto(int? codigoId,int? ventaId)
+        private DetalleVentas ToDetalleVenta(DetalleVentaViewModel detalleVentas)
         {
-            if (codigoId == null)
+            return new DetalleVentas
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Productos productos = await db.Productos.Where(q=>q.CodigoId==codigoId).FirstAsync();
-            if (productos == null)
-            {
-                return HttpNotFound();
-            }
-
-            if (ventaId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ventas ventas = await db.Ventas.FindAsync(ventaId);
-            if (ventas == null)
-            {
-                return HttpNotFound();
-            }
-
-            DetalleVentas detalle = new DetalleVentas { };
-
-            
+                VentaId = detalleVentas.VentaId,
+                Cantidad = detalleVentas.Cantidad,
+                Descuento = detalleVentas.Descuento,
+                DetalleVentasId = detalleVentas.DetalleVentasId,
+                Precio = detalleVentas.Precio,
+                ProductoId = detalleVentas.ProductoId,
+                Productos = detalleVentas.Productos
+               
+            };
 
 
-
-            return View(productos);
         }
+
+
+      
 
         // GET: Ventas/Create
         public ActionResult Create()
@@ -247,8 +200,89 @@ namespace Tienda.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+        #endregion
+
 
         #region DetalleVenta
+
+        [HttpPost]
+        public async Task<ActionResult> BuscarArticulo(DetalleVentas detalleVenta)
+        {
+
+
+            detalleVenta = ToProducto(detalleVenta);
+
+            try
+            {
+                if (detalleVenta.Cantidad == 0)
+                {
+                    var CantidadActual = db.Productos.Where(q => q.ProductoId == detalleVenta.ProductoId).FirstOrDefault().Cantidad;
+
+                    ViewBag.Mensaje = "No Cuenta Con Esa Cantidad de Articulos, De Ese Producto Tienes en Inventario " + CantidadActual;
+
+
+
+
+                    return RedirectToAction("CreateDetalleVenta", new { id = detalleVenta.VentaId, Mensaje = ViewBag.Mensaje });
+                }
+                else
+                {
+
+                    db.DetalleVentas.Add(detalleVenta);
+                    await db.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = detalleVenta.VentaId });
+
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+
+
+            return View();
+
+
+
+
+        }
+
+        [HttpPost]
+        public ActionResult BuscarPrecio(DetalleVentas detalleVenta)
+        {
+
+
+
+            var Producto = db.Productos.Where(p => p.ProductoId == detalleVenta.ProductoId).First();
+
+            try
+            {
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+
+
+            return Json(Producto.Precio, JsonRequestBehavior.AllowGet);
+
+
+
+
+        }
+
 
         public async Task<ActionResult> DetailsDetalleVenta(int? id)
         {
@@ -265,8 +299,8 @@ namespace Tienda.Controllers
         }
 
         // GET: DetalleVentas/Create
-        public  ActionResult CreateDetalleVenta(int? id)
-        {
+        public  ActionResult CreateDetalleVenta(int? id,string Mensaje)
+   {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -276,9 +310,10 @@ namespace Tienda.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.ProductoId = new SelectList(db.Productos, "ProductoId", "Descripcion");
+            ViewBag.Mensaje = Mensaje;
             return View(new DetalleVentaViewModel{
                 VentaId=ventas.VentaId,
+                Precio=ventas.DetalleVentas.FirstOrDefault().Precio,
                 Ventas=ventas,
                 GetProductos=db.Productos.ToList()
             });
@@ -310,30 +345,41 @@ namespace Tienda.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateDetalleVenta(DetalleVentas detalleVentas)
+        public async Task<ActionResult> CreateDetalleVenta(DetalleVentaViewModel detalleVentas)
         {
             if (ModelState.IsValid)
-            {
-                detalleVentas = ToProducto(detalleVentas);
 
-                if (detalleVentas.Cantidad > 0)
+            {
+                var  detalleVenta = ToDetalleVenta(detalleVentas);
+                detalleVenta = ToProducto(detalleVenta);
+
+                if (detalleVenta.Cantidad > 0)
                 {
-                    db.DetalleVentas.Add(detalleVentas);
+                    db.DetalleVentas.Add(detalleVenta);
                     await db.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = detalleVentas.VentaId });
                 }
                 else {
 
-                    VentaViewModel model = new VentaViewModel();
-                 model.Mensaje = "No cuentas Con Esa Cantidad de Prendas en Inventario";
-                    return RedirectToAction("Details", new { id = detalleVentas.VentaId});
+                    var CantidadActual = db.Productos.Where(q=>q.ProductoId==detalleVenta.ProductoId).FirstOrDefault().Cantidad;
+                  
+                    ViewBag.Mensaje = "No Cuenta Con Esa Cantidad de Articulos, De Ese Producto Tienes en Inventario " + CantidadActual;
+
+                    return RedirectToAction("Details", new { id = detalleVentas.VentaId,Mensaje=ViewBag.Mensaje });
                 }
             }
 
             ViewBag.ProductoId = new SelectList(db.Productos, "ProductoId", "Descripcion",detalleVentas.ProductoId);
             detalleVentas.Ventas = await db.Ventas.FindAsync(detalleVentas.VentaId);
-            return View(detalleVentas);
+            return View((new DetalleVentaViewModel
+            {
+                VentaId = detalleVentas.VentaId,
+                Precio = detalleVentas.Precio,
+                Ventas = detalleVentas.Ventas,
+                GetProductos = db.Productos.ToList()
+            }));
         }
+
 
         private DetalleVentas ToProducto(DetalleVentas detalleVentas)
         {
@@ -343,7 +389,7 @@ namespace Tienda.Controllers
                var Producto= db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId).First();
                 detalleVentas.ProductoId = Producto.ProductoId;
                 detalleVentas.Precio = Producto.Precio;
-                if ((Producto.Cantidad-detalleVentas.Cantidad) >= 1)
+                if ((Producto.Cantidad-detalleVentas.Cantidad) >= 0)
                 {
 
                   
@@ -354,7 +400,7 @@ namespace Tienda.Controllers
                 }
                 else
                 {
-                    ViewBag.mensaje = "No cuentas Con Esa Cantidad de Prendas en Inventario";
+                   
                     detalleVentas.Cantidad = 0;
                     return detalleVentas;
                     
@@ -484,6 +530,7 @@ namespace Tienda.Controllers
         }
 
         #endregion
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

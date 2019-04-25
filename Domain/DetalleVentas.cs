@@ -21,6 +21,8 @@ namespace Domain
 
         public double Subtotal { get { return (Precio * Cantidad)-Descuento; } }
 
+      
+
         public int ProductoId { get; set; }
 
         public int VentaId { get; set; }
