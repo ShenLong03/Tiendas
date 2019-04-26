@@ -10,11 +10,16 @@ using System.Web.Mvc;
 using Domain;
 using Tienda.Helpers;
 using Tienda.Models;
+using System.IO;
+using System.Data.Entity.Infrastructure;
+using Rotativa;
 
 namespace Tienda.Controllers
 {
     public class VentasController : Controller
-    {//
+    {/// <summary>
+    /// ///
+    /// </summary>
         private DataContextLocal db = new DataContextLocal();
 
 
@@ -528,6 +533,156 @@ namespace Tienda.Controllers
 
             };
         }
+
+        #endregion
+
+
+        #region Reportes
+
+
+        public ActionResult ExportPDF()
+
+        {
+            return new ActionAsPdf("Details")
+            {
+
+                FileName = Server.MapPath("contenc/invoice.pdf")
+            };
+        }
+        //public ActionResult Report(string id)
+
+        //{
+        //    // LocalReport lr = new LocalReport();
+        //    // string path = Path.Combine(Server.MapPath("~/Reportes"), "ReporteVentas.rdlc");
+
+        //    // if (System.IO.File.Exists(path))
+        //    // {
+        //    //     lr.ReportPath = path;
+        //    // }
+        //    // else
+        //    // {
+        //    //     return View();
+        //    // }
+
+        //    // var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
+
+        //    // ReportDataSource report = new ReportDataSource("TiendaDataSet", Datos);
+
+        //    // lr.DataSources.Add(report);
+        //    // string reportType = id;
+        //    // string mimeType = id;
+        //    // string encoding;
+        //    // string fileNameExtension;
+
+        //    // //string deviceInfo =
+
+        //    // //    "<DeviceInfo>" +
+        //    // //    "<OutputFormat>" + id + "</OutputFormat>" +
+        //    // //    "<PageWidth>8.5in</PageWidth>" +
+        //    // //    "<PageHeight>11in<PageHeight>" +
+        //    // //    "<MarginTop>0.5in<MarginTop>" +
+        //    // //    "<MarginLeft>1in<MarginLeft>" +
+        //    // //    "<MarginRight>1in<MarginRight>" +
+        //    // //    "<MarginBottom>0.5in<MarginBottom>" +
+        //    // //    "</DeviceInfo>";
+        //    // string deviceInfo =
+        //    //"<DeviceInfo>" +
+
+        //    // "  <OutputFormat>PDF</OutputFormat>" +
+
+        //    // "  <PageWidth>8.5in</PageWidth>" +
+
+        //    // "  <PageHeight>11in</PageHeight>" +
+
+        //    // "  <MarginTop>0.5in</MarginTop>" +
+
+        //    // "  <MarginLeft>1in</MarginLeft>" +
+
+        //    // "  <MarginRight>1in</MarginRight>" +
+
+        //    // "  <MarginBottom>0.5in</MarginBottom>" +
+
+        //    // "</DeviceInfo>";
+
+        //    // Warning[] warnings;
+        //    // string[] streams;
+        //    // byte[] renderedBytes;
+
+        //    // renderedBytes = lr.Render(
+        //    //     reportType,
+        //    //     deviceInfo,
+        //    //     out mimeType,
+        //    //     out encoding,
+        //    //     out fileNameExtension,
+        //    //     out streams,
+        //    //     out warnings);
+
+        //    // return File(renderedBytes, mimeType);
+
+        //    var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
+
+
+
+        //    //var reportViewer = new ReportViewer();
+        //    //reportViewer.LocalReport.ReportPath =
+        //    //Server.MapPath("~/Reportes/ReporteVentas.rdlc");
+        //    //reportViewer.LocalReport.DataSources.Clear();
+        //    //reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TiendaDataSet", Datos));
+        //    //// ReportDataSource report = new ReportDataSource("TiendaDataSet", Datos);
+        //    //reportViewer.LocalReport.Refresh();
+        //    //reportViewer.ProcessingMode = ProcessingMode.Local;
+        //    //reportViewer.AsyncRendering = false;
+        //    //reportViewer.SizeToReportContent = true;
+        //    //reportViewer.ZoomMode = ZoomMode.FullPage;
+
+        //    //ViewBag.ReportViewer1 = reportViewer;
+        //    //return View();
+        //}
+
+        //public ActionResult GenerateReport(int month, int year, int snapshottypeid, long taskrunid)
+        //{
+        //    var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
+
+        //    //Step 1 : Create a Local Report.
+        //    LocalReport localReport = new LocalReport();
+
+        //    //Step 2 : Specify Report Path.
+        //    localReport.ReportPath = Server.MapPath("~/Reportes/ReporteVentas.rdlc");
+
+        //    //Step 3 : Create Report DataSources
+        //    //ReportDataSource dsUnAssignedLevels = new ReportDataSource();
+        //    //dsUnAssignedLevels.Name = "UnAssignedLevels";
+        //    //dsUnAssignedLevels.Value = dataSet.UnAssignedLevels;
+
+        //    ReportDataSource dsReportInfo = new ReportDataSource("TiendaDataSet", Datos);
+        //    //dsReportInfo.Name = "ReportInfo";
+        //    //dsReportInfo.Value = dataSet.ReportInfo;
+
+        //    //Step 4 : Bind DataSources into Report
+        //  //  localReport.DataSources.Add(dsUnAssignedLevels);
+        //    localReport.DataSources.Add(dsReportInfo);
+
+        //    //Step 5 : Call render method on local Report to generate report contents in Bytes array
+        //    string deviceInfo = "<DeviceInfo>" +
+        //     "  <OutputFormat>PDF</OutputFormat>" +
+        //     "</DeviceInfo>";
+        //    Warning[] warnings;
+        //    string[] streams;
+        //    string mimeType;
+        //    byte[] renderedBytes;
+        //    string encoding;
+        //    string fileNameExtension;
+        //    //Render the report           
+        //    renderedBytes = localReport.Render("PDF", deviceInfo, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+
+        //    //Step 6 : Set Response header to pass filename that will be used while saving report.
+        //    Response.AddHeader("Content-Disposition",
+        //     "attachment; filename=UnAssignedLevels.pdf");
+
+        //    //Step 7 : Return file content result
+        //    return new FileContentResult(renderedBytes, mimeType);
+        //}
 
         #endregion
 

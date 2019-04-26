@@ -1,0 +1,25 @@
+﻿
+@using ReportViewerForMvc
+
+@Html.ReportViewer(ViewBag.ReportViewer1 as Microsoft.Reporting.WebForms.ReportViewer)
+@{
+    ViewBag.Title = "Report";
+}
+
+<h2>Report</h2>
+
+<div>
+    @ViewBag.ReportViewer
+
+</div>
+
+<div style="padding:10px; border:1px solid black">
+
+    <div><a href="@Url.Action("Report",new {id="PDF"})">Get Report PDF</a></div>
+    <div><a href="@Url.Action("Report",new {id="Excel"})">Get Report Excel</a></div>
+    <div><a href="@Url.Action("Report",new {id="Word"})">Get Report Word</a></div>
+    <div><a href="@Url.Action("Report",new {id="Imagen"})">Get Report Imagen</a></div>
+    <div><a href="@Url.Action("GenerateReport",new { month=2, year=2000, snapshottypeid=20,taskrunid=2000})">Get Report Imagen</a></div>
+
+</div>
+
