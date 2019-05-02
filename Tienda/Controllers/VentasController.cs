@@ -20,7 +20,7 @@ namespace Tienda.Controllers
     {/// <summary>
     /// ///
     /// </summary>
-        private DataContextLocal db = new DataContextLocal();
+        private DataContext db = new DataContext();
 
 
         #region Ventas
@@ -118,8 +118,23 @@ namespace Tienda.Controllers
 
         }
 
+        private DetalleVentaViewModel ToDetalleViewModel(DetalleVentas detalleVentas)
+        {
+            return new DetalleVentaViewModel
+            {
+                VentaId = detalleVentas.VentaId,
+                Cantidad = detalleVentas.Cantidad,
+                Descuento = detalleVentas.Descuento,
+                DetalleVentasId = detalleVentas.DetalleVentasId,
+                Precio = detalleVentas.Precio,
+                ProductoId = detalleVentas.ProductoId,
+                Productos = detalleVentas.Productos
 
-      
+            };
+
+
+        }
+
 
         // GET: Ventas/Create
         public ActionResult Create()
@@ -422,19 +437,26 @@ namespace Tienda.Controllers
         }
 
         // GET: DetalleVentas/Edit/5
-        public async Task<ActionResult> EditDetalleVenta(int? id)
+        public async Task<ActionResult> EditDetalleVenta(int? id,string Mensaje)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DetalleVentas detalleVentas = await db.DetalleVentas.FindAsync(id);
+            detalleVentas= ToDetalleViewModel(detalleVentas);
             if (detalleVentas == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.VentaId = new SelectList(db.Ventas, "VentaId", "VentaId", detalleVentas.VentaId);
-            return View(detalleVentas);
+            ViewBag.Mensaje = Mensaje;
+            return View(new DetalleVentaViewModel
+            {
+                VentaId = detalleVentas.VentaId,
+                Precio = detalleVentas.Precio,
+                DetalleVentasId=detalleVentas.DetalleVentasId,
+                GetProductos = db.Productos.ToList()
+            });
         }
 
         // POST: DetalleVentas/Edit/5
@@ -446,9 +468,27 @@ namespace Tienda.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(detalleVentas).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+
+
+                detalleVentas = ToProducto(detalleVentas);
+
+                if (detalleVentas.Cantidad > 0)
+                {
+                    db.Entry(detalleVentas).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = detalleVentas.VentaId });
+                }
+                else
+                {
+
+                    var CantidadActual = db.Productos.Where(q => q.ProductoId == detalleVentas.ProductoId).FirstOrDefault().Cantidad;
+
+                    ViewBag.Mensaje = "No Cuenta Con Esa Cantidad de Articulos, De Ese Producto Tienes en Inventario " + CantidadActual;
+
+                    return RedirectToAction("EditDetalleVenta", new { id = detalleVentas.DetalleVentasId, Mensaje = ViewBag.Mensaje });
+                }
+            
             }
             ViewBag.VentaId = new SelectList(db.Ventas, "VentaId", "VentaId", detalleVentas.VentaId);
             return View(detalleVentas);
@@ -470,7 +510,7 @@ namespace Tienda.Controllers
         }
 
         // POST: DetalleVentas/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteDetalleVenta")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmedDetalleVenta(int id)
         {

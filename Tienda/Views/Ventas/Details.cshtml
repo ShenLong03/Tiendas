@@ -5,9 +5,27 @@
 
     ViewBag.Title = "Details";
 }
+<style>
+    h2,h4, th, dt,label {
+        color: white;
+        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    }
 
-<h2>Details</h2>
-<h4>Venta #@Model.VentaId</h4>
+    td,dd {
+        text-shadow: 2px 2px 5px gray;
+    }
+
+    #Bordear {
+        border-radius: 40%;
+    }
+
+        #Bordear:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            font-size: 15px;
+        }
+</style>
+<h2>Detalles Factura  # @Model.VentaId</h2>
+
 <hr />
 
 
@@ -28,7 +46,7 @@
 
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
+           Nombre Cliente
         </dt>
 
         <dd>
@@ -36,7 +54,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
+           Fecha Orden
         </dt>
 
         <dd>
@@ -44,7 +62,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TotalOrden)
+           Total Orden
         </dt>
 
         <dd>
@@ -56,13 +74,13 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.VentaId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar Factura", "Edit", new { id = Model.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" }) |
+    @Html.ActionLink("Volver Lista Facturas", "Index",new { }, new { @class = "btn btn-info", @id = "Bordear" })
 </p>
 
 <hr />
 @{
-    Html.RenderAction("CreateDetalleVentaPartial", new { id = Model.VentaId });
+    Html.RenderAction("CreateDetalleVentaPartial", new { id = Model.VentaId } );
 }
 <hr />
 <table class="table">
@@ -108,9 +126,9 @@
                 @item.Subtotal.ToString("C2")
             </td>
             <td>
-                @Html.ActionLink("EditDetalleVenta", "EditDetalleVenta", new { id = item.DetalleVentasId }) |
-                @Html.ActionLink("DetailsDetalleVenta", "DetailsDetalleVenta", new { id = item.DetalleVentasId }) |
-                @Html.ActionLink("DeleteDetalleVenta", "DeleteDetalleVenta", new { id = item.DetalleVentasId })
+                @Html.ActionLink("Editar Detalle Venta", "EditDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-warning", @id = "Bordear" }) |
+                @Html.ActionLink("Ver Detalle Venta", "DetailsDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-info", @id = "Bordear" }) |
+                @Html.ActionLink("Borar Detalle Venta", "DeleteDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-danger", @id = "Bordear" })
             </td>
         </tr>
     }
@@ -122,14 +140,14 @@
 
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TotalBruto, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TotalBruto, "TotalBruto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.TotalBruto, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
 
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.TotalNeto, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TotalNeto,"TotalNeto", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.TotalNeto, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
 
@@ -142,7 +160,7 @@
 </div>
 
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<button type="button" class="btn btn-info" id="Bordear" data-toggle="modal" data-target="#myModal">Pagar Factura</button>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -151,24 +169,22 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Pago</h4>
+                
+                <h4 class="modal-title"align="center">Pago</h4>
+               
             </div>
             <div class="modal-body">
                 @{Html.RenderAction("CreatePago", new { id = Model.VentaId }); }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="Bordear" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
 
     </div>
 </div>
 
-<button type="button" id="Bra"></button>
 
-<a id="prueba" href="@Url.Action("ExportPDF","Ventas")">Exportar PDF</a>
-<input type="button" id="btnAgregar" value="Agregar Articulo" class="btn btn-default" />
 
 
 @section Scripts {

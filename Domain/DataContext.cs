@@ -1,5 +1,9 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
+using System.Linq;
+using System;
 
 namespace Domain
 {
@@ -46,7 +50,32 @@ namespace Domain
 
         public DbSet<DetalleVentas> DetalleVentas { get; set; }
 
-        public DbSet<Tallas> Tallas { get; set; }
+    
+
+
+        //public virtual ObjectResult<sp_CargarDataFacuras_Result> sp_CargarDataFacuras(Nullable<int> idVenta)
+        //{
+        //    var idVentaParameter = idVenta.HasValue ?
+        //        new ObjectParameter("idVenta", idVenta) :
+        //        new ObjectParameter("idVenta", typeof(int));
+
+        //    return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_CargarDataFacuras_Result>("sp_CargarDataFacuras", idVentaParameter);
+        //}
+
+        //public partial class sp_CargarDataFacuras_Result
+        //{
+        //    public int VentaId { get; set; }
+        //    public string Nombre { get; set; }
+        //    public double TotalOrden { get; set; }
+        //    public System.DateTime Fecha { get; set; }
+        //    public int Cantidad { get; set; }
+        //    public double Descuento { get; set; }
+        //    public double SubTotal { get; set; }
+        //    public double Precio { get; set; }
+        //    public int DetalleVentasId { get; set; }
+        //    public string Descripcion { get; set; }
+        //    public string Abreviatura { get; set; }
+        //}
 
     }
     }

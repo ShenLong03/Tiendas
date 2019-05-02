@@ -20,27 +20,7 @@ namespace Tienda.Controllers
 
         public ActionResult Index()
         {
-            var Producto = db.Productos.Where(p => p.ProductoId == 1).ToList();
-            foreach (var item in Producto)
-            {
-                Productos productos = new Productos();
-                productos.CodigoId = item.CodigoId;
-                productos.Cantidad = item.Cantidad;
-                productos.Descripcion = item.Descripcion;
-                productos.DetalleVentas = item.DetalleVentas;
-                productos.Precio = item.Precio;
-                productos.ProductoId = item.ProductoId;
-                productos.TallaId = item.TallaId;
-                productos.Tallas = item.Tallas;
-                return Json(productos, JsonRequestBehavior.AllowGet);
-            }
-               
-
-        
-
-            var persona = new Persona() { Nombre = "Brainer", Edad = 25 };
-
-
+            
 
            
             return View();

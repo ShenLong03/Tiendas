@@ -35,36 +35,36 @@ namespace Tienda.Helpers
             }
         }
 
-        public static void CheckTallas()
-        {
-            try
-            {
-                if (!FindByNameTallas("XS"))
-                {
-                    AddTallas(1, "XS");
-                }
-                if (!FindByNameTallas("S"))
-                {
-                    AddTallas(2, "S");
-                }
-                if (!FindByNameTallas("M"))
-                {
-                    AddTallas(3, "M");
-                }
-                if (!FindByNameTallas("L"))
-                {
-                    AddTallas(4, "L");
-                }
-                if (!FindByNameTallas("XL"))
-                {
-                    AddTallas(5, "XL");
-                }
-            }
-            catch (Exception)
-            {
+        //public static void CheckTallas()
+        //{
+        //    try
+        //    {
+        //        if (!FindByNameTallas("XS"))
+        //        {
+        //            AddTallas(1, "XS");
+        //        }
+        //        if (!FindByNameTallas("S"))
+        //        {
+        //            AddTallas(2, "S");
+        //        }
+        //        if (!FindByNameTallas("M"))
+        //        {
+        //            AddTallas(3, "M");
+        //        }
+        //        if (!FindByNameTallas("L"))
+        //        {
+        //            AddTallas(4, "L");
+        //        }
+        //        if (!FindByNameTallas("XL"))
+        //        {
+        //            AddTallas(5, "XL");
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         public static void Add(int id, string nombre)
         {
@@ -90,29 +90,29 @@ namespace Tienda.Helpers
             }
         }
 
-        public static void AddTallas(int id, string nombre)
-        {
-            try
-            {
-                using (DataContextLocal db = new DataContextLocal())
-                {
-                    var talla = new Tallas
-                    {
-                        TallaId = id,
-                        Abreviatura = nombre,
+        //public static void AddTallas(int id, string nombre)
+        //{
+        //    try
+        //    {
+        //        using (DataContextLocal db = new DataContextLocal())
+        //        {
+        //            var talla = new Tallas
+        //            {
+        //                TallaId = id,
+        //                Abreviatura = nombre,
 
-                    };
+        //            };
 
-                    db.Tallas.Add(talla);
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception)
-            {
+        //            db.Tallas.Add(talla);
+        //            db.SaveChanges();
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
         public static bool FindByName(string nombre)
         {
@@ -134,25 +134,25 @@ namespace Tienda.Helpers
             }
         }
 
-        public static bool FindByNameTallas(string nombre)
-        {
-            try
-            {
-                using (DataContextLocal db = new DataContextLocal())
-                {
-                    if (db.Tallas.Where(e => e.Abreviatura == nombre).Count() > 0)
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
+        //public static bool FindByNameTallas(string nombre)
+        //{
+        //    try
+        //    {
+        //        using (DataContextLocal db = new DataContextLocal())
+        //        {
+        //            if (db.Tallas.Where(e => e.Abreviatura == nombre).Count() > 0)
+        //            {
+        //                return true;
+        //            }
+        //            return false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
         public void Dispose()
         {

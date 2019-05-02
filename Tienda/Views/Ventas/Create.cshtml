@@ -3,9 +3,27 @@
 @{
     ViewBag.Title = "Create";
 }
+<style>
+    h2, th,h4,label {
+        color: white;
+        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    }
 
-<h2>Create</h2>
-<h4>Ventas</h4>
+    td {
+        text-shadow: 2px 2px 5px gray;
+    }
+
+    #Bordear {
+        border-radius: 40%;
+    }
+
+        #Bordear:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            font-size: 15px;
+        }
+</style>
+
+<h4>Crear Nueva Venta</h4>
 <hr />
 
 @using (Html.BeginForm())
@@ -20,7 +38,7 @@
         @Html.HiddenFor(model => model.ClienteId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Fecha,"Fecha Venta", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                 @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
@@ -28,7 +46,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Nombre, "Nombre Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
@@ -39,16 +57,17 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Crear" id="Bordear" class="btn btn-primary" />
             </div>
         </div>
     </div>
 }
 
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    <div>
+        @Html.ActionLink("Volver a lista Facturas", "Index", new { }, new { @class = "btn btn-info", @id = "Bordear" })
+      
+    </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")*

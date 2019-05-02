@@ -15,13 +15,13 @@ namespace Tienda.Controllers
 {
     public class ProductosController : Controller
     {
-        private DataContextLocal db = new DataContextLocal();
+        private DataContext db = new DataContext();
 
         // GET: Productos
         public async Task<ActionResult> Index()
         {
-            Ayudas.CheckTallas();
-            var productos = db.Productos.Include(p => p.Tallas);
+           
+            var productos = db.Productos.Include(p => p.DetalleVentas);
             return View(await productos.ToListAsync());
         }
 
@@ -43,7 +43,7 @@ namespace Tienda.Controllers
         // GET: Productos/Create
         public ActionResult Create()
         {
-            ViewBag.TallaId = new SelectList(db.Tallas, "TallaId", "Abreviatura");
+            
             return View();
         }
 
@@ -52,7 +52,7 @@ namespace Tienda.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ProductoId,CodigoId,Descripcion,TallaId,Precio,Cantidad")] Productos productos)
+        public async Task<ActionResult> Create( Productos productos)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace Tienda.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TallaId = new SelectList(db.Tallas, "TallaId", "Abreviatura", productos.TallaId);
+           
             return View(productos);
         }
 
@@ -77,7 +77,7 @@ namespace Tienda.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TallaId = new SelectList(db.Tallas, "TallaId", "Abreviatura", productos.TallaId);
+           
             return View(productos);
         }
 
@@ -86,7 +86,7 @@ namespace Tienda.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ProductoId,CodigoId,Descripcion,TallaId,Precio,Cantidad")] Productos productos)
+        public async Task<ActionResult> Edit(Productos productos)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace Tienda.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.TallaId = new SelectList(db.Tallas, "TallaId", "Abreviatura", productos.TallaId);
+           
             return View(productos);
         }
 

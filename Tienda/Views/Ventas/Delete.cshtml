@@ -4,11 +4,33 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<style>
+    h2, th,dt {
+        color: white;
+        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    }
+    h3 {
+        text-shadow: 2px 2px 5px red;
+    }
+    td,dd {
+        text-shadow: 2px 2px 5px gray;
+    }
+
+    #Bordear {
+        border-radius: 40%;
+    }
+
+        #Bordear:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            font-size: 15px;
+        }
+</style>
+<h2>Borrar Venta</h2>
+
+<h3>Estas Seguro Borrar Esta Venta?</h3>
 <div>
-    <h4>Ventas</h4>
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -16,7 +38,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cliente.Nombre)
+            @Html.DisplayFor(model => model.Nombre)
         </dd>
 
         <dt>
@@ -35,22 +57,16 @@
             @Html.DisplayFor(model => model.TotalOrden)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MedioPagoId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MedioPagoId)
-        </dd>
+        
 
     </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div class="form-actions no-color">
+        <input type="submit" value="Borrar" id="Bordear" class="btn btn-danger" /> |
+        @Html.ActionLink("Volver Lista Detalles", "Details", new { id = Model.VentaId }, new { @class = "btn btn-info", @id = "Bordear" })
+    </div>
     }
 </div>

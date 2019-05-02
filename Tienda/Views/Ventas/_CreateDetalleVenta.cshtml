@@ -4,7 +4,25 @@
     ViewBag.Title = "CreateDetalleVenta";
     Layout = null;
 }
+<style>
+    h2, th {
+        color: white;
+        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    }
 
+    td {
+        text-shadow: 2px 2px 5px gray;
+    }
+
+    #Bordear {
+        border-radius: 40%;
+    }
+
+        #Bordear:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            font-size: 15px;
+        }
+</style>
 @using (Html.BeginForm("CreateDetalleVenta", "Ventas", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -13,7 +31,7 @@
     <div class="form-inline">
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.LabelFor(model => model.ProductoId, htmlAttributes: new { @class = "control-label" })
+        @Html.LabelFor(model => model.ProductoId,"Codigo Articulo", htmlAttributes: new { @class = "control-label" })
         @Html.EditorFor(model => model.ProductoId, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
 
@@ -25,9 +43,9 @@
         @Html.EditorFor(model => model.Descuento, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.Descuento, "", new { @class = "text-danger" })
 
-        <input type="submit" value="Create" class="btn btn-default" />
+        <input type="submit" value="Crear Detalle" id="Bordear" class="btn btn-primary" />
 
-        <a class="btn btn-info" href="@Url.Action("CreateDetalleVenta",new {id=Model.VentaId})">Buscar</a>
+        <a class="btn btn-info" id="Bordear" href="@Url.Action("CreateDetalleVenta",new {id=Model.VentaId})">Buscar Articulo</a>
 
     </div>
 }

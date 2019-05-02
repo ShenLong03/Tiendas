@@ -19,13 +19,12 @@ namespace Domain
 
         public string Descripcion { get; set; } = "";
 
-        public int TallaId { get; set; }
+        public string Talla { get; set; } = "";
 
         public double Precio { get; set; } = 0;
 
         public double Cantidad { get; set; } = 0;
 
-        public virtual Tallas Tallas { get; set; }
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
 

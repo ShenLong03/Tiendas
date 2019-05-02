@@ -65,6 +65,8 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -95,6 +97,24 @@
     <Compile Include="CierreCaja.cs" />
     <Compile Include="Cliente.cs" />
     <Compile Include="DataContext.cs" />
+    <Compile Include="DataModel\DataSp.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSp.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\DataSp.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSp.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\DataSp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSp.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\sp_CargarDataFacuras_Result.cs">
+      <DependentUpon>DataSp.tt</DependentUpon>
+    </Compile>
     <Compile Include="DetalleVentas.cs" />
     <Compile Include="Pagos.cs" />
     <Compile Include="Productos.cs" />
@@ -111,6 +131,13 @@
     <None Include="Content\bootstrap-theme.min.css.map" />
     <None Include="Content\bootstrap.css.map" />
     <None Include="Content\bootstrap.min.css.map" />
+    <EntityDeploy Include="DataModel\DataSp.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DataSp.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DataModel\DataSp.edmx.diagram">
+      <DependentUpon>DataSp.edmx</DependentUpon>
+    </None>
     <None Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="fonts\glyphicons-halflings-regular.ttf" />
     <None Include="fonts\glyphicons-halflings-regular.woff" />
@@ -123,14 +150,26 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="DataModel\DataSp.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DataSp.edmx</DependentUpon>
+      <LastGenOutput>DataSp.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DataModel\DataSp.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DataSp.edmx</DependentUpon>
+      <LastGenOutput>DataSp.cs</LastGenOutput>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
