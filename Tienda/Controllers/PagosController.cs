@@ -8,12 +8,13 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Domain;
+using Tienda.Models;
 
 namespace Tienda.Controllers
 {
     public class PagosController : Controller
     {
-        private DataContext db = new DataContext();
+        private DataContextLocal db = new DataContextLocal();
 
         // GET: Pagos
         public async Task<ActionResult> Index()

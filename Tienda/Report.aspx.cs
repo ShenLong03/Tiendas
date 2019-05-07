@@ -1,4 +1,5 @@
-﻿using Microsoft.Reporting.WebForms;
+﻿
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
 
@@ -99,11 +100,27 @@ in db.Productos on dv.ProductoId equals pv.ProductoId
             ReportViewer1.AsyncRendering = false;
             ReportViewer1.SizeToReportContent = true;
             ReportViewer1.ZoomMode = ZoomMode.FullPage;
-
-
+         
+            LocalReport rdlc = new LocalReport();//importante
+            rdlc.ReportPath = @"~/Reportes/Report2.rdlc";//direccion absoluta del reporte, es muy importante a la hora de ponerlo en funcionamiento.
+                                                // si os da algun error puede ser por no encontrar la direccion exacta del reporte, creedme ya lo pase.
+            rdlc.ReportEmbeddedResource = "Tienda.Reportes.Report1.rdlc";
+            // las siguientes lineas son los datos que nesecito para mi reporte.
+           // DataTable customer = CDetalleVenta.Mostrar((int)id_now);
+            rdlc.DataSources.Add(new ReportDataSource("DataVentasDetalle", Datos));
+            //DataTable venta2 = CVenta.MostrarID(id_now);
+            //DataTable infomacion = CEmpresa.Mostrar();
+            //DataTable cliente = CCliente.MostrarID(venta2.Rows[0]["idCliente"].ToString());
+            //los parametros dento de mi report.rdlc
+            //ReportParameter nombre = new ReportParameter("nombre_cliente", cliente.Rows[0]["nombre"].ToString());
+            //ReportParameter fecha = new ReportParameter("fecha", venta2.Rows[0]["fecVenta"].ToString());
+            //rdlc.SetParameters(new ReportParameter[] { nombre, fecha });
+            // instancio un objeto dentro de la clase Impresor
+            Impresor impresor = new Impresor();
+            impresor.Imprime(rdlc);
           //  AutoPrintCls autoprintme = new AutoPrintCls(ReportViewer1.LocalReport);
           //  autoprintme.Print();
-            //  }
+          //  }
         }
 
 

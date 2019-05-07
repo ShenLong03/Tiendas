@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Domain
 {
@@ -25,6 +26,10 @@ namespace Domain
 
         public double Cantidad { get; set; } = 0;
 
+        [NotMapped]
+        public HttpPostedFileBase FotoFile { get; set; }
+
+        public string Foto { get; set; }
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
 

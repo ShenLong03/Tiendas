@@ -13,6 +13,7 @@ using Tienda.Models;
 using System.IO;
 using System.Data.Entity.Infrastructure;
 using Rotativa;
+using Microsoft.Reporting.WebForms;
 
 namespace Tienda.Controllers
 {
@@ -20,7 +21,7 @@ namespace Tienda.Controllers
     {/// <summary>
     /// ///
     /// </summary>
-        private DataContext db = new DataContext();
+        private DataContextLocal db = new DataContextLocal();
 
 
         #region Ventas
@@ -30,7 +31,7 @@ namespace Tienda.Controllers
         public async Task<ActionResult> Index()
         {
             Ayudas.CheckMediosPagos();
-            var ventas = db.Ventas.Include(v => v.Cliente).OrderBy(q=>q.Fecha);
+            var ventas = db.Ventas.Include(v => v.Cliente).OrderByDescending(q=>q.VentaId);
             return View(await ventas.ToListAsync());
         }
      
@@ -58,7 +59,7 @@ namespace Tienda.Controllers
             Ventas venta = db.Ventas.Find(ventas.VentaId);
 
             venta.TotalOrden =view.TotalNeto;
-
+            venta.CantidadPendiente = view.TotalNeto;
 
             db.Entry(venta).State = EntityState.Modified;
             db.SaveChanges();
@@ -331,10 +332,11 @@ namespace Tienda.Controllers
                 return HttpNotFound();
             }
             ViewBag.Mensaje = Mensaje;
+            
             return View(new DetalleVentaViewModel{
                 VentaId=ventas.VentaId,
-                Precio=ventas.DetalleVentas.FirstOrDefault().Precio,
-                Ventas=ventas,
+               Precio= 15000,
+            
                 GetProductos=db.Productos.ToList()
             });
         }
@@ -377,6 +379,8 @@ namespace Tienda.Controllers
                 {
                     db.DetalleVentas.Add(detalleVenta);
                     await db.SaveChangesAsync();
+                    
+
                     return RedirectToAction("Details", new { id = detalleVentas.VentaId });
                 }
                 else {
@@ -538,7 +542,7 @@ namespace Tienda.Controllers
             ViewBag.MedioPagoId = new SelectList(db.MediosPago, "MedioPagoId", "FormaPago");
             var view = Toview(ventas);
             view = SetTotal(view);
-            return PartialView(new PagoViewModel {VentaId=ventas.VentaId,ClienteId=ventas.ClienteId,TotalNeto=view.TotalNeto });
+            return PartialView(new PagoViewModel {VentaId=ventas.VentaId,ClienteId=ventas.ClienteId,TotalNeto=view.TotalNeto-ventas.CantidadPagada });
         }
 
 
@@ -548,10 +552,63 @@ namespace Tienda.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (view.Abono==true)
+                {
+                    var pago = ToPago(view);
+                    pago.Monto = view.Monto;
+                    db.Pagos.Add(pago);
+                    await db.SaveChangesAsync();
+
+                    Ventas venta = db.Ventas.Find(view.VentaId);
+
+                    venta.CantidadPagada = venta.CantidadPagada+view.Monto;
+                    venta.CantidadPendiente = venta.TotalOrden - venta.CantidadPagada;
+
+                    db.Entry(venta).State = EntityState.Modified;
+                    db.SaveChanges();
+                } else
+                {
+
+               
                var pago= ToPago(view);
                 pago.Monto -= view.Vuelto;
                 db.Pagos.Add(pago);
                 await db.SaveChangesAsync();
+
+                    Ventas venta = db.Ventas.Find(view.VentaId);
+
+                    venta.CantidadPagada = view.Monto;
+                    venta.CantidadPendiente = venta.TotalOrden - venta.CantidadPagada;
+
+                    db.Entry(venta).State = EntityState.Modified;
+                    db.SaveChanges();
+                    var Datos = (from v in db.Ventas
+                                 join dv in db.DetalleVentas on v.VentaId equals dv.VentaId
+                                 join pv
+        in db.Productos on dv.ProductoId equals pv.ProductoId
+                                 where v.VentaId == view.VentaId
+                                 select new { v.VentaId, v.Nombre, v.TotalOrden, v.Fecha, dv.Cantidad, dv.Descuento, dv.Precio, pv.Descripcion, pv.Talla }).ToList();
+
+
+
+                    LocalReport rdlc = new LocalReport();//importante
+                                                         //rdlc.ReportPath = @"C:\Users\BRAINER\Documents\Proyectos2019\Tiendas\Tienda\Reportes\Report2.rdlc";//direccion absoluta del reporte, es muy importante a la hora de ponerlo en funcionamiento.
+                    rdlc.ReportPath = @"~..\..\Reportes\Report2.rdlc";                                                                                                  // si os da algun error puede ser por no encontrar la direccion exacta del reporte, creedme ya lo pase.
+                    rdlc.ReportEmbeddedResource = "Tienda.Reportes.Report1.rdlc";
+                    // las siguientes lineas son los datos que nesecito para mi reporte.
+                    // DataTable customer = CDetalleVenta.Mostrar((int)id_now);
+                    rdlc.DataSources.Add(new ReportDataSource("DataVentasDetalle", Datos));
+                    //DataTable venta2 = CVenta.MostrarID(id_now);
+                    //DataTable infomacion = CEmpresa.Mostrar();
+                    //DataTable cliente = CCliente.MostrarID(venta2.Rows[0]["idCliente"].ToString());
+                    //los parametros dento de mi report.rdlc
+                    //ReportParameter nombre = new ReportParameter("nombre_cliente", cliente.Rows[0]["nombre"].ToString());
+                    //ReportParameter fecha = new ReportParameter("fecha", venta2.Rows[0]["fecVenta"].ToString());
+                    //rdlc.SetParameters(new ReportParameter[] { nombre, fecha });
+                    // instancio un objeto dentro de la clase Impresor
+                    Impresor impresor = new Impresor();
+                    impresor.Imprime(rdlc);
+                }
                 return RedirectToAction("Index");
             }
 
@@ -579,151 +636,46 @@ namespace Tienda.Controllers
 
         #region Reportes
 
+        //public  ActionResult CargarVentas()
+        //{
+        //    DateTime FechaInicial = DateTime.Today;
+        //    DateTime FechaFinal = DateTime.Today.AddHours(23).AddMinutes(59);
 
-        public ActionResult ExportPDF()
 
+        //    ViewBag.FechaInicial = FechaInicial;
+        //    ViewBag.FechaFinal = FechaFinal;
+        //    return View();
+        //}
+
+        [HandleError]
+        public async Task<ActionResult> CargarVentas(string sFechaInicial, string sFechaFinal)
         {
-            return new ActionAsPdf("Details")
+            DateTime FechaInicial = DateTime.Today;
+            DateTime FechaFinal = DateTime.Today.AddHours(23).AddMinutes(59);
+            if (!string.IsNullOrEmpty(sFechaInicial))
             {
+                DateTime.TryParse(sFechaInicial, out FechaInicial);
+            }
+            if (!string.IsNullOrEmpty(sFechaFinal))
+            {
+                DateTime.TryParse(sFechaFinal, out FechaFinal);
+                FechaFinal = FechaFinal.AddHours(23).AddMinutes(59);
+            }
+            var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
+            double totalBruto = 0;
+            foreach (var item in facturas)
+            {
+                totalBruto = totalBruto + item.DetalleVentas.Sum(d => d.Subtotal);
+            }
 
-                FileName = Server.MapPath("contenc/invoice.pdf")
-            };
+            ViewBag.FechaInicial = FechaInicial;
+            ViewBag.FechaFinal = FechaFinal;
+            ViewBag.Total = totalBruto;
+           
+            return View(facturas.OrderByDescending(f=>f.VentaId));
         }
-        //public ActionResult Report(string id)
-
-        //{
-        //    // LocalReport lr = new LocalReport();
-        //    // string path = Path.Combine(Server.MapPath("~/Reportes"), "ReporteVentas.rdlc");
-
-        //    // if (System.IO.File.Exists(path))
-        //    // {
-        //    //     lr.ReportPath = path;
-        //    // }
-        //    // else
-        //    // {
-        //    //     return View();
-        //    // }
-
-        //    // var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
-
-        //    // ReportDataSource report = new ReportDataSource("TiendaDataSet", Datos);
-
-        //    // lr.DataSources.Add(report);
-        //    // string reportType = id;
-        //    // string mimeType = id;
-        //    // string encoding;
-        //    // string fileNameExtension;
-
-        //    // //string deviceInfo =
-
-        //    // //    "<DeviceInfo>" +
-        //    // //    "<OutputFormat>" + id + "</OutputFormat>" +
-        //    // //    "<PageWidth>8.5in</PageWidth>" +
-        //    // //    "<PageHeight>11in<PageHeight>" +
-        //    // //    "<MarginTop>0.5in<MarginTop>" +
-        //    // //    "<MarginLeft>1in<MarginLeft>" +
-        //    // //    "<MarginRight>1in<MarginRight>" +
-        //    // //    "<MarginBottom>0.5in<MarginBottom>" +
-        //    // //    "</DeviceInfo>";
-        //    // string deviceInfo =
-        //    //"<DeviceInfo>" +
-
-        //    // "  <OutputFormat>PDF</OutputFormat>" +
-
-        //    // "  <PageWidth>8.5in</PageWidth>" +
-
-        //    // "  <PageHeight>11in</PageHeight>" +
-
-        //    // "  <MarginTop>0.5in</MarginTop>" +
-
-        //    // "  <MarginLeft>1in</MarginLeft>" +
-
-        //    // "  <MarginRight>1in</MarginRight>" +
-
-        //    // "  <MarginBottom>0.5in</MarginBottom>" +
-
-        //    // "</DeviceInfo>";
-
-        //    // Warning[] warnings;
-        //    // string[] streams;
-        //    // byte[] renderedBytes;
-
-        //    // renderedBytes = lr.Render(
-        //    //     reportType,
-        //    //     deviceInfo,
-        //    //     out mimeType,
-        //    //     out encoding,
-        //    //     out fileNameExtension,
-        //    //     out streams,
-        //    //     out warnings);
-
-        //    // return File(renderedBytes, mimeType);
-
-        //    var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
-
-
-
-        //    //var reportViewer = new ReportViewer();
-        //    //reportViewer.LocalReport.ReportPath =
-        //    //Server.MapPath("~/Reportes/ReporteVentas.rdlc");
-        //    //reportViewer.LocalReport.DataSources.Clear();
-        //    //reportViewer.LocalReport.DataSources.Add(new ReportDataSource("TiendaDataSet", Datos));
-        //    //// ReportDataSource report = new ReportDataSource("TiendaDataSet", Datos);
-        //    //reportViewer.LocalReport.Refresh();
-        //    //reportViewer.ProcessingMode = ProcessingMode.Local;
-        //    //reportViewer.AsyncRendering = false;
-        //    //reportViewer.SizeToReportContent = true;
-        //    //reportViewer.ZoomMode = ZoomMode.FullPage;
-
-        //    //ViewBag.ReportViewer1 = reportViewer;
-        //    //return View();
-        //}
-
-        //public ActionResult GenerateReport(int month, int year, int snapshottypeid, long taskrunid)
-        //{
-        //    var Datos = db.Ventas.Where(q => q.VentaId == 1).ToList();
-
-        //    //Step 1 : Create a Local Report.
-        //    LocalReport localReport = new LocalReport();
-
-        //    //Step 2 : Specify Report Path.
-        //    localReport.ReportPath = Server.MapPath("~/Reportes/ReporteVentas.rdlc");
-
-        //    //Step 3 : Create Report DataSources
-        //    //ReportDataSource dsUnAssignedLevels = new ReportDataSource();
-        //    //dsUnAssignedLevels.Name = "UnAssignedLevels";
-        //    //dsUnAssignedLevels.Value = dataSet.UnAssignedLevels;
-
-        //    ReportDataSource dsReportInfo = new ReportDataSource("TiendaDataSet", Datos);
-        //    //dsReportInfo.Name = "ReportInfo";
-        //    //dsReportInfo.Value = dataSet.ReportInfo;
-
-        //    //Step 4 : Bind DataSources into Report
-        //  //  localReport.DataSources.Add(dsUnAssignedLevels);
-        //    localReport.DataSources.Add(dsReportInfo);
-
-        //    //Step 5 : Call render method on local Report to generate report contents in Bytes array
-        //    string deviceInfo = "<DeviceInfo>" +
-        //     "  <OutputFormat>PDF</OutputFormat>" +
-        //     "</DeviceInfo>";
-        //    Warning[] warnings;
-        //    string[] streams;
-        //    string mimeType;
-        //    byte[] renderedBytes;
-        //    string encoding;
-        //    string fileNameExtension;
-        //    //Render the report           
-        //    renderedBytes = localReport.Render("PDF", deviceInfo, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
-
-
-        //    //Step 6 : Set Response header to pass filename that will be used while saving report.
-        //    Response.AddHeader("Content-Disposition",
-        //     "attachment; filename=UnAssignedLevels.pdf");
-
-        //    //Step 7 : Return file content result
-        //    return new FileContentResult(renderedBytes, mimeType);
-        //}
-
+   
+  
         #endregion
 
         protected override void Dispose(bool disposing)

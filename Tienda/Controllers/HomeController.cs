@@ -1,9 +1,10 @@
-﻿using Domain;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Domain;
 using Tienda.Models;
 
 namespace Tienda.Controllers
@@ -20,10 +21,12 @@ namespace Tienda.Controllers
 
         public ActionResult Index()
         {
+
+            var prendas = db.Clientes.Take(28).ToList();
+
             
 
-           
-            return View();
+            return View(prendas);
         }
 
         public ActionResult About()

@@ -17,6 +17,10 @@ namespace Domain
 
         public double TotalOrden { get; set; } = 0;
 
+        public double CantidadPagada { get; set; } = 0;
+
+        public double CantidadPendiente { get; set; } = 0;
+
         public int? ClienteId { get; set; }
 
         public string Nombre { get; set; }

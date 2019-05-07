@@ -3,31 +3,37 @@
 @{
     ViewBag.Title = "Index";
 }
+
 <style>
-    h2,th {
+    h2, h4, th, dt, label, a {
         color: white;
-        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+        text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px White;
     }
-   td {
-        text-shadow: 2px 2px 5px gray;
+
+    td, dd {
+        color: white;
+        text-shadow: 2px 2px 5px white;
     }
 
     #Bordear {
-        border-radius: 40%;
-  
-       
-   
+        border-radius: 50%;
     }
-        #Bordear:hover {
-            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-            font-size: 15px;
-        }
+
+    a:hover {
+        color: white;
+    }
+
+    #Bordear:hover {
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        font-size: 15px;
+    }
 </style>
+
 
     <h2>Pagina Principal</h2>
 
     <p>
-        @Html.ActionLink("Crear Nueva Factura", "Create", new { }, new { @class = "btn btn-primary",@id= "Bordear" })
+        @Html.ActionLink("Crear", "Create", new { }, new { @class = "btn btn-primary",@id= "Bordear" })
     </p>
 
 
@@ -40,7 +46,13 @@
                 Fecha Orden
             </th>
             <th>
-               Total Orden
+                Total Orden
+            </th>
+            <th>
+                Cantidad  Pagada
+            </th>
+            <th>
+                Cantidad Pendiente
             </th>
 
             <th></th>
@@ -48,27 +60,31 @@
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Fecha)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalOrden)
-                </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalOrden)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantidadPagada)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantidadPendiente)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" })
+                @Html.ActionLink("Detalles", "Details", new { id = item.VentaId }, new { @class = "btn btn-info", @id = "Bordear" })
+                @Html.ActionLink("Borrar", "Delete", new { id = item.VentaId }, new { @class = "btn btn-danger", @id = "Bordear" })
+            </td>
 
 
-                <td>
-                    @Html.ActionLink("Editar Venta", "Edit", new { id = item.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" }) |
-                    @Html.ActionLink("Detalles Venta", "Details", new { id = item.VentaId }, new { @class = "btn btn-info", @id = "Bordear" }) |
-                    @Html.ActionLink("Borrar Venta", "Delete", new { id = item.VentaId }, new { @class = "btn btn-danger", @id = "Bordear" })
-                </td>
 
-
-
-            </tr>
+        </tr>
         }
 
     </table>

@@ -173,6 +173,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Helpers\Ayudas.cs" />
+    <Compile Include="Helpers\FilesHelper.cs" />
+    <Compile Include="Helpers\Impresor.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DataContextLocal.cs" />
     <Compile Include="Models\DetalleVentaViewModel.cs" />
@@ -415,6 +417,7 @@
       <DependentUpon>DataVentasDetalle.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Facturas\FacturaJS.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -507,6 +510,7 @@
     <Content Include="Views\Ventas\EditDetalleVenta.cshtml" />
     <Content Include="Views\Ventas\DetailsDetalleVenta.cshtml" />
     <Content Include="Views\Ventas\DeleteDetalleVenta.cshtml" />
+    <Content Include="Views\Ventas\CargarVentas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

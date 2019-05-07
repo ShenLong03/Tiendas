@@ -15,7 +15,7 @@ namespace Tienda.Controllers
 {
     public class ProductosController : Controller
     {
-        private DataContext db = new DataContext();
+        private DataContextLocal db = new DataContextLocal();
 
         // GET: Productos
         public async Task<ActionResult> Index()
@@ -56,6 +56,14 @@ namespace Tienda.Controllers
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Productos";
+
+                if (productos.FotoFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(productos.FotoFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
                 db.Productos.Add(productos);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

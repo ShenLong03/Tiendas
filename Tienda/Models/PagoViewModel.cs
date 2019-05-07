@@ -11,5 +11,7 @@ namespace Tienda.Models
         public double Vuelto { get; set; }
 
         public double TotalNeto { get; set; }
+
+        public bool Abono { get; set; }
     }
 }

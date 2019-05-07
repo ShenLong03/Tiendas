@@ -1,0 +1,123 @@
+﻿@model IEnumerable<Domain.Ventas>
+
+@{
+    /**/
+
+    ViewBag.Title = "CargarVentas";
+}
+<style>
+    h2, h4, th, dt, label,a {
+        color: white;
+        text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px White;
+    }
+
+    td, dd {
+        color: white;
+        text-shadow: 2px 2px 5px white;
+    }
+
+    #Bordear {
+        border-radius: 50%;
+    }
+    a:hover {
+        color: white;
+    }
+        #Bordear:hover {
+        
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            font-size: 15px;
+        }
+</style>
+
+<h2>Cargar Ventas</h2>
+
+
+<hr />
+@using (Html.BeginForm())
+{
+
+    <div class="form-inline">
+        <label>Desde</label>
+        <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
+        <label>Hasta</label>
+        <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />
+        <button type="submit" class="btn btn-lg btn-info btn-floating raised-button"><span class="icon-search"></span></button>
+    </div>
+}
+<hr />
+
+@if (ViewBag.Total != null)
+{
+    <label>Total Ventas</label>
+    <input id="sFechaFi" name="sFechaF" type="text" value="@ViewBag.Total.ToString()" class="form-control" disabled />
+
+
+}
+<hr />
+
+<div class="table-responsive">
+    <table id="oTable" class="display hover table table-amaru-dark " data-page-length="25">
+        <thead>
+            <tr>
+
+                <th>
+                    Numero Factura
+                </th>
+                <th>
+                    Nombre Cliente
+                </th>
+                <th>
+                    Fecha Factura
+                </th>
+                <th>
+                    Total Orden
+                </th>
+                <th>
+                    Cantidad Pagada
+                </th>
+                <th>Cantidad Pendiente</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+
+
+
+                <tr>
+
+                    <td>
+                        <small>
+                            <a href="@Url.Action("Edit", new { id = item.VentaId })"><i class="text-muted icon-pencil"></i></a>
+                        </small>
+                        &nbsp;<a href="@Url.Action("Details", new { id = item.VentaId })">@item.VentaId</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalOrden)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CantidadPagada)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CantidadPendiente)
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Facturas/FacturaJS.js"></script>
+}
