@@ -10,7 +10,7 @@ namespace Tienda.Models
     {
         public List<Productos>GetProductos{ get; set; }
 
-      
+        public  string Foto { get; set; }
 
     }
 }

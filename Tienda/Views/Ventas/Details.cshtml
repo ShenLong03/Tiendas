@@ -5,30 +5,7 @@
 
     ViewBag.Title = "Details";
 }
-<style>
-    h2, h4, th, dt, label, a {
-        color: white;
-        text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px White;
-    }
-
-    td, dd {
-        color: white;
-        text-shadow: 2px 2px 5px white;
-    }
-
-    #Bordear {
-        border-radius: 50%;
-    }
-
-    a:hover {
-        color: white;
-    }
-
-    #Bordear:hover {
-        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-        font-size: 15px;
-    }
-</style>
+<link href="~/Css/Paginas.css" rel="stylesheet" />
 <h2>Detalles Factura  # @Model.VentaId</h2>
 
 <hr />
@@ -79,8 +56,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar Factura", "Edit", new { id = Model.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" }) |
-    @Html.ActionLink("Volver Lista Facturas", "Index",new { }, new { @class = "btn btn-info", @id = "Bordear" })
+    @Html.ActionLink("Editar", "Edit", new { id = Model.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" }) 
+    @Html.ActionLink("Volver Facturas", "Index",new { }, new { @class = "btn btn-info", @id = "Bordear" })
 </p>
 
 <hr />
@@ -92,6 +69,9 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Productos.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Productos.Foto)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DetalleVentas.FirstOrDefault().Ventas.Nombre)
@@ -111,31 +91,45 @@
 
     @foreach (var item in Model.DetalleVentas)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Productos.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ventas.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cantidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descuento)
-            </td>
-            <td>
-                @item.Subtotal.ToString("C2")
-            </td>
-            <td>
-                @Html.ActionLink("Editar Detalle Venta", "EditDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-warning", @id = "Bordear" }) |
-                @Html.ActionLink("Ver Detalle Venta", "DetailsDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-info", @id = "Bordear" }) |
-                @Html.ActionLink("Borar Detalle Venta", "DeleteDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-danger", @id = "Bordear" })
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Productos.Descripcion)
+        </td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.Productos.Foto))
+            {
+                <center>
+                    <img src="@Url.Content(item.Productos.Foto)" class="img-mid imagen-increase-big" />
+                </center>
+            }
+            else
+            {
+                <center>
+                    <img src="~/images/user.png" class="img-mid imagen-increase-big" />
+                </center>
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ventas.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Precio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cantidad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descuento)
+        </td>
+        <td>
+            @item.Subtotal.ToString("C2")
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "EditDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-warning", @id = "Bordear" })
+            @Html.ActionLink("Detalle", "DetailsDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-info", @id = "Bordear" })
+            @Html.ActionLink("Borrar", "DeleteDetalleVenta", new { id = item.DetalleVentasId }, new { @class = "btn btn-danger", @id = "Bordear" })
+        </td>
+    </tr>
     }
 
 </table>
@@ -165,7 +159,7 @@
 </div>
 
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-info" id="Bordear" data-toggle="modal" data-target="#myModal">Pagar Factura</button>
+<button type="button" class="btn btn-info" id="Bordear" data-toggle="modal" data-target="#myModal">Facturar</button>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">

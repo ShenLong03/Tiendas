@@ -64,6 +64,11 @@ namespace Tienda.Controllers
                     pic = FilesHelper.UploadPhoto(productos.FotoFile, folder);
                     pic = string.Format("{0}/{1}", folder, pic);
                 }
+
+                productos.Foto = pic;
+                //Productos producto = new Productos();
+                
+                //producto.Foto = pic;
                 db.Productos.Add(productos);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

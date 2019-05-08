@@ -336,8 +336,8 @@ namespace Tienda.Controllers
             return View(new DetalleVentaViewModel{
                 VentaId=ventas.VentaId,
                Precio= 15000,
-            
-                GetProductos=db.Productos.ToList()
+                Foto= null,
+                GetProductos =db.Productos.ToList()
             });
         }
 

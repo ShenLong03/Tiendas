@@ -368,10 +368,15 @@
     <Content Include="Content\themes\basic\assets\fonts\icons.svg" />
     <Content Include="Content\themes\default\assets\fonts\icons.svg" />
     <Content Include="Content\themes\default\assets\images\flags.png" />
+    <Content Include="Css\Principal.css" />
+    <Content Include="Css\Paginas.css" />
+    <Content Include="Css\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\user.png" />
+    <Content Include="images\visa.png" />
     <Content Include="Prueba.aspx" />
     <Content Include="Report.aspx" />
     <Content Include="ReportViewerWebForm.aspx" />
@@ -514,6 +519,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Productos\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,0 +1,15 @@
+/* this CSS is not part of the widget, it is here just as an example of the demo page styling.... Don't copy this one, roll your own. One
+ * of the key things about the widget is that it allows you to do your own styling!
+ */
+#grad1 {
+    height: 200px;
+    background-image: linear-gradient(to right, rgb(255,255,255),rgb(192,192,192));
+}
+
+/*li, p {
+    color: white;
+}
+
+    li:hover {
+        color: white;
+    }*/
