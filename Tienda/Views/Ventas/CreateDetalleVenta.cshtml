@@ -84,12 +84,12 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.GetProductos,"Foto", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <label class="control-label col-md-2">Foto</label> 
                     <div class="col-md-10">
                         @if (!string.IsNullOrEmpty(Model.Foto))
                         {
                             <center>
-                                <img id="Prueba" src="" class="img-mid imagen-increase-big" />
+                                <img id="Prueba" src="@Url.Content(Model.Foto)" class="img-mid imagen-increase-big" />
                             </center>
                         }
                         else

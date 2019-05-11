@@ -24,15 +24,83 @@ namespace Tienda.Controllers
         private DataContextLocal db = new DataContextLocal();
 
 
+        #region Account
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(Usuario model, string returnUrl)
+        {
+          
+
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            else
+            {
+               
+                       
+                      
+
+
+
+                        var userID = await db.Usuarios.Where(u => u.Clave == model.Clave&&u.Nombre==model.Nombre).FirstAsync();
+
+
+                if (userID!=null) {
+                     
+                        var userView = new Usuario
+                        {
+                            Clave = userID.Clave,
+                            Nombre = userID.Nombre,
+                            Perfil = userID.Perfil
+                          
+                        };
+                   
+
+                        Session["UsuarioLogin"] = userView;
+                    return RedirectToAction("Index", "Ventas", new { });
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Ventas", new { });
+                   
+                }
+
+               
+
+            }
+          
+           
+
+        }
+
+        #endregion
+
         #region Ventas
 
-    
+
         // GET: Ventas
         public async Task<ActionResult> Index()
         {
+           if( Session["UsuarioLogin"] !=null){ 
             Ayudas.CheckMediosPagos();
             var ventas = db.Ventas.Include(v => v.Cliente).OrderByDescending(q=>q.VentaId);
             return View(await ventas.ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Ventas", new { });
+            }
+
         }
      
       
@@ -43,28 +111,33 @@ namespace Tienda.Controllers
         // GET: Ventas/Details/5
         public async Task<ActionResult> Details(int? id,string Mensaje)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ventas ventas = await db.Ventas.FindAsync(id);
-            if (ventas == null)
-            {
-                return HttpNotFound();
-            }
-            VentaViewModel view = Toview(ventas);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Ventas ventas = await db.Ventas.FindAsync(id);
+                if (ventas == null)
+                {
+                    return HttpNotFound();
+                }
+                VentaViewModel view = Toview(ventas);
 
-            view = SetTotal(view);
+                view = SetTotal(view);
 
-            Ventas venta = db.Ventas.Find(ventas.VentaId);
+                Ventas venta = db.Ventas.Find(ventas.VentaId);
 
-            venta.TotalOrden =view.TotalNeto;
-            venta.CantidadPendiente = view.TotalNeto;
+                venta.TotalOrden = view.TotalNeto;
+                venta.CantidadPendiente = view.TotalNeto;
 
-            db.Entry(venta).State = EntityState.Modified;
-            db.SaveChanges();
-            ViewBag.Mensaje = Mensaje;
+                db.Entry(venta).State = EntityState.Modified;
+                db.SaveChanges();
+                ViewBag.Mensaje = Mensaje;
+           
             return View(view);
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         private VentaViewModel SetTotal(VentaViewModel view)
@@ -140,9 +213,13 @@ namespace Tienda.Controllers
         // GET: Ventas/Create
         public ActionResult Create()
         {
-            ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombre");
-            ViewBag.MedioPagoId = new SelectList(db.MediosPago, "MedioPagoId", "FormaPago");
-            return View(new Ventas());
+            if (Session["UsuarioLogin"] != null)
+            {
+                ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombre");
+                ViewBag.MedioPagoId = new SelectList(db.MediosPago, "MedioPagoId", "FormaPago");
+                return View(new Ventas());
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Ventas/Create
@@ -166,7 +243,9 @@ namespace Tienda.Controllers
         // GET: Ventas/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -177,6 +256,7 @@ namespace Tienda.Controllers
             }
             ViewBag.ClienteId = new SelectList(db.Clientes, "ClienteId", "Nombre", ventas.ClienteId);
             return View(ventas);
+        }else{ return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Ventas/Edit/5
@@ -199,7 +279,9 @@ namespace Tienda.Controllers
         // GET: Ventas/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -209,6 +291,7 @@ namespace Tienda.Controllers
                 return HttpNotFound();
             }
             return View(ventas);
+        }else{ return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Ventas/Delete/5
@@ -307,7 +390,9 @@ namespace Tienda.Controllers
 
         public async Task<ActionResult> DetailsDetalleVenta(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -317,35 +402,44 @@ namespace Tienda.Controllers
                 return HttpNotFound();
             }
             return View(detalleVentas);
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // GET: DetalleVentas/Create
         public  ActionResult CreateDetalleVenta(int? id,string Mensaje)
    {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Ventas ventas = db.Ventas.Find(id);
+                if (ventas == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.Mensaje = Mensaje;
+                var Foto = db.Productos.Where(q => q.ProductoId == 1).FirstOrDefault().Foto;
+                return View(new DetalleVentaViewModel
+                {
+                    VentaId = ventas.VentaId,
+                    Precio = 15000,
+                    Foto = Foto,
+                    GetProductos = db.Productos.ToList()
+                });
             }
-            Ventas ventas =  db.Ventas.Find(id);
-            if (ventas == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.Mensaje = Mensaje;
-            
-            return View(new DetalleVentaViewModel{
-                VentaId=ventas.VentaId,
-               Precio= 15000,
-                Foto= null,
-                GetProductos =db.Productos.ToList()
-            });
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
 
         // GET: DetalleVentas/Create
         public  ActionResult CreateDetalleVentaPartial(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -360,6 +454,7 @@ namespace Tienda.Controllers
                 VentaId = ventas.VentaId,
                 Ventas = ventas
             });
+        }else{ return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: DetalleVentas/Create
@@ -443,7 +538,9 @@ namespace Tienda.Controllers
         // GET: DetalleVentas/Edit/5
         public async Task<ActionResult> EditDetalleVenta(int? id,string Mensaje)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -461,6 +558,8 @@ namespace Tienda.Controllers
                 DetalleVentasId=detalleVentas.DetalleVentasId,
                 GetProductos = db.Productos.ToList()
             });
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: DetalleVentas/Edit/5
@@ -501,7 +600,10 @@ namespace Tienda.Controllers
         // GET: DetalleVentas/Delete/5
         public async Task<ActionResult> DeleteDetalleVenta(int? id)
         {
-            if (id == null)
+
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -511,6 +613,7 @@ namespace Tienda.Controllers
                 return HttpNotFound();
             }
             return View(detalleVentas);
+        }else{ return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: DetalleVentas/Delete/5
@@ -530,7 +633,10 @@ namespace Tienda.Controllers
 
         public ActionResult CreatePago(int? id)
         {
-            if (id == null)
+
+            if (Session["UsuarioLogin"] != null)
+            {
+                if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -543,6 +649,8 @@ namespace Tienda.Controllers
             var view = Toview(ventas);
             view = SetTotal(view);
             return PartialView(new PagoViewModel {VentaId=ventas.VentaId,ClienteId=ventas.ClienteId,TotalNeto=view.TotalNeto-ventas.CantidadPagada });
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
 
@@ -650,7 +758,10 @@ namespace Tienda.Controllers
         [HandleError]
         public async Task<ActionResult> CargarVentas(string sFechaInicial, string sFechaFinal)
         {
-            DateTime FechaInicial = DateTime.Today;
+
+            if (Session["UsuarioLogin"] != null)
+            {
+                DateTime FechaInicial = DateTime.Today;
             DateTime FechaFinal = DateTime.Today.AddHours(23).AddMinutes(59);
             if (!string.IsNullOrEmpty(sFechaInicial))
             {
@@ -673,6 +784,8 @@ namespace Tienda.Controllers
             ViewBag.Total = totalBruto;
            
             return View(facturas.OrderByDescending(f=>f.VentaId));
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
    
   

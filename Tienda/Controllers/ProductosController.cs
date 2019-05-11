@@ -20,31 +20,44 @@ namespace Tienda.Controllers
         // GET: Productos
         public async Task<ActionResult> Index()
         {
-           
-            var productos = db.Productos.Include(p => p.DetalleVentas);
-            return View(await productos.ToListAsync());
+            if (Session["UsuarioLogin"] != null)
+            {
+
+                var productos = db.Productos.Include(p => p.DetalleVentas);
+                return View(await productos.ToListAsync());
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // GET: Productos/Details/5
         public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Productos productos = await db.Productos.FindAsync(id);
+                if (productos == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(productos);
             }
-            Productos productos = await db.Productos.FindAsync(id);
-            if (productos == null)
-            {
-                return HttpNotFound();
-            }
-            return View(productos);
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // GET: Productos/Create
         public ActionResult Create()
         {
-            
-            return View();
+
+            if (Session["UsuarioLogin"] != null)
+            {
+
+                return View();
+            }
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Productos/Create
@@ -81,17 +94,21 @@ namespace Tienda.Controllers
         // GET: Productos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (Session["UsuarioLogin"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Productos productos = await db.Productos.FindAsync(id);
+                if (productos == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(productos);
             }
-            Productos productos = await db.Productos.FindAsync(id);
-            if (productos == null)
-            {
-                return HttpNotFound();
-            }
-           
-            return View(productos);
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Productos/Edit/5
@@ -114,16 +131,21 @@ namespace Tienda.Controllers
         // GET: Productos/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
+
+            if (Session["UsuarioLogin"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Productos productos = await db.Productos.FindAsync(id);
+                if (productos == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(productos);
             }
-            Productos productos = await db.Productos.FindAsync(id);
-            if (productos == null)
-            {
-                return HttpNotFound();
-            }
-            return View(productos);
+            else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
         // POST: Productos/Delete/5

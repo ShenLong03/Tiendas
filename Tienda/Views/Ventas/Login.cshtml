@@ -1,0 +1,113 @@
+﻿
+@model Domain.Usuario
+@{
+
+
+    ViewBag.Title = "Iniciar sesiÃ³n";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Iniciar sesiÃ³n</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="theme-color" content="#ffffff">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/LoginDesign/css/main.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                @using (Html.BeginForm("Login", "Ventas", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", @class = "login100-form validate-form" }))
+                {
+                    <span class="login100-form-title tituloPatty p-b-26">
+                        Bienvenido
+                    </span>
+                    <span class="login100-form-title p-b-48">
+                        <img src="~/Content/Imagenes/Grillo.jpg" width="150" height="75" alt="..." class="img-circle">
+                    </span>
+                    if(ViewBag.Mensaje!=null){ 
+                    <div class="alert alert-danger">
+                        @ViewBag.Mensaje
+                    </div>}
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "input100", @type = "text" })
+        <span class="focus-input100" data-placeholder="Usuario"></span>
+    </div>
+
+    <div class="wrap-input100 validate-input" data-validate="Enter password">
+        <span class="btn-show-pass">
+            <i class="zmdi zmdi-eye"></i>
+        </span>
+        @Html.PasswordFor(m => m.Clave, new { @class = "input100", @type = "password" })
+        <span class="focus-input100" data-placeholder="Password"></span>
+    </div>
+
+    <div class="container-login100-form-btn">
+        <div class="wrap-login100-form-btn">
+            <div class="login100-form-bgbtn"></div>
+            <button class="login100-form-btn btn-warning">
+                Ingresar
+            </button>
+        </div>
+    </div>
+
+
+    }
+</div>
+        </div>
+    </div>
+    <div id="dropDownSelect1"></div>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/bootstrap/js/popper.js"></script>
+    <script src="/LoginDesign/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/daterangepicker/moment.min.js"></script>
+    <script src="/LoginDesign/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="/LoginDesign/js/main.js"></script>
+
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

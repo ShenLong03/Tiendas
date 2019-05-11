@@ -215,6 +215,17 @@
 
 
 
+        $('input[type="checkbox"]').on('change', function (e) {
+            if (this.checked) {
+              
+                $("#idText").hide();
+                $("#idlabel").hide();
+            } else {
+
+                $("#idText").show();
+                $("#idlabel").show();
+            }
+        });
 
 
 

@@ -38,3 +38,26 @@ a:hover {
     animation-duration: 2s;
     transition-duration: 2s;
 }
+
+.btn-floating {
+    z-index: 1;
+    overflow: hidden;
+    width: 47px;
+    height: 47px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #a6c;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+    .btn-floating span {
+        font-size: large;
+        line-height: 47px;
+        display: inline-block;
+        width: inherit;
+        text-align: center;
+        color: #fff;
+    }
+.btn-info {
+    background-color: #33b5e5;
+}
