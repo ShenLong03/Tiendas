@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 
 namespace Domain
 {
@@ -30,6 +31,9 @@ namespace Domain
         public HttpPostedFileBase FotoFile { get; set; }
 
         public string Foto { get; set; }
+
+        [NotMapped]
+        public string FotoFull { get { return string.Concat(WebConfigurationManager.AppSettings["URL"], Foto.Substring(1)); } }
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
 

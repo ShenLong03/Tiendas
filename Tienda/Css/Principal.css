@@ -3,7 +3,7 @@
  */
 #grad1 {
     height: 200px;
-    background-image: linear-gradient(to right, rgb(255,255,255),rgb(192,192,192));
+    background-image: linear-gradient(to right,Black,Black);
 }
 
 /*li, p {

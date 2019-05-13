@@ -14,6 +14,7 @@ using System.IO;
 using System.Data.Entity.Infrastructure;
 using Rotativa;
 using Microsoft.Reporting.WebForms;
+using System.Globalization;
 
 namespace Tienda.Controllers
 {
@@ -357,30 +358,19 @@ namespace Tienda.Controllers
 
         }
 
-        [HttpPost]
-        public ActionResult BuscarPrecio(DetalleVentas detalleVenta)
+       
+        public JsonResult BuscarPrecio(DetalleVentas detalleVenta)
         {
 
 
-
+            db.Configuration.ProxyCreationEnabled = false;
             var Producto = db.Productos.Where(p => p.ProductoId == detalleVenta.ProductoId).First();
 
-            try
-            {
+       
 
 
 
-
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-
-
-
-            return Json(Producto.Precio, JsonRequestBehavior.AllowGet);
+            return Json(Producto, JsonRequestBehavior.AllowGet);
 
 
 
@@ -765,12 +755,13 @@ namespace Tienda.Controllers
             DateTime FechaFinal = DateTime.Today.AddHours(23).AddMinutes(59);
             if (!string.IsNullOrEmpty(sFechaInicial))
             {
-                DateTime.TryParse(sFechaInicial, out FechaInicial);
+                    FechaInicial= DateTime.ParseExact(sFechaInicial,"dd/MM/yyyy",CultureInfo.InvariantCulture);
             }
             if (!string.IsNullOrEmpty(sFechaFinal))
             {
-                DateTime.TryParse(sFechaFinal, out FechaFinal);
+                    FechaFinal= DateTime.ParseExact(sFechaFinal, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 FechaFinal = FechaFinal.AddHours(23).AddMinutes(59);
+
             }
             var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
             double totalBruto = 0;

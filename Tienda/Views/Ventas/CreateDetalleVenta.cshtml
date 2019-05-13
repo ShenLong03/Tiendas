@@ -89,13 +89,13 @@
                         @if (!string.IsNullOrEmpty(Model.Foto))
                         {
                             <center>
-                                <img id="Prueba" src="@Url.Content(Model.Foto)" class="img-mid imagen-increase-big" />
+                                <img id="Imagen" src="@Url.Content(Model.Foto)" class="img-mid imagen-increase-big" />
                             </center>
                         }
                         else
                         {
                             <center>
-                                <img id="Pruebas"src="~/images/user.png" class="img-mid imagen-increase-big" />
+                                <img id="Imagen"src="~/images/user.png" class="img-mid imagen-increase-big" />
                            </center>
                         }
                     </div>
@@ -152,14 +152,12 @@
                           debugger;
 
                         //  var Foto = data.Foto;
-                          $('#Precio').val(data);
+                          $('#Precio').val(data.Precio);
                          // $('#prueba').val(data.Foto);
-                          //document.getElementById('pruebas').src = "/images/visa.png";
-
-                          //'<img id="Pruebas" src="' + Foto + '" class="img-mid imagen-increase-big" />'
-                          //$('#pruebas') + "src=" + (data.Foto);
-                          @*@Model.Foto=data.Foto;*@
-                        //  alert(data.Foto);
+                          // document.getElementById('prueba').src = "~/images/user.png";
+                         
+                          $("#Imagen").attr("src", "" + data.FotoFull);
+                     
                       },
              });
 

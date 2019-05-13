@@ -14,13 +14,35 @@
 @using (Html.BeginForm())
 {
 
-    <div class="form-inline">
-        <label>Desde</label>
+<div class="form-inline">
+    @*<label>Desde</label>
         <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
         <label>Hasta</label>
-        <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />
-        <button type="submit" class="btn btn-lg btn-info btn-floating raised-button"><span class="icon-search"></span></button>
+        <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />*@
+
+
+    <div class="form-group">
+        <label>Desde</label>
+        <div class='input-group date' id='fechaInicial'>
+
+            <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
     </div>
+    <div class="form-group">
+        <label>Hasta</label>
+        <div class='input-group date' id='fechaFinal'>
+
+            <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+</div>
 }
 <hr />
 
@@ -97,5 +119,11 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script src="~/Scripts/Facturas/FacturaJS.js"></script>
+ 
+    <script>
+        $(function () {
+            $('#fechaInicial').datetimepicker({format:"DD/MM/YYYY"});
+            $('#fechaFinal').datetimepicker({ format: "DD/MM/YYYY" });
+        });
+    </script>
 }
