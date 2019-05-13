@@ -47,11 +47,11 @@ namespace Tienda.Controllers
             }
             else
             {
-               
-                       
-                      
 
 
+
+
+                if (db.Usuarios.Where(u => u.Clave == model.Clave && u.Nombre == model.Nombre).Count()>0) {
 
                         var userID = await db.Usuarios.Where(u => u.Clave == model.Clave&&u.Nombre==model.Nombre).FirstAsync();
 
@@ -69,6 +69,12 @@ namespace Tienda.Controllers
 
                         Session["UsuarioLogin"] = userView;
                     return RedirectToAction("Index", "Ventas", new { });
+                    }
+                    else
+                    {
+
+                        return RedirectToAction("Login", "Ventas", new { });
+                    }
                 }
                 else
                 {
