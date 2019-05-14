@@ -7,63 +7,219 @@
 
 
 
-    <h2>Pagina Principal</h2>
+<h2>Pagina Principal</h2>
 
-    <p>
-        @Html.ActionLink("Crear", "Create", new { }, new { @class = "btn btn-primary",@id= "Bordear" })
-    </p>
+<p>
+    @Html.ActionLink("Crear", "Create", new { }, new { @class = "btn btn-primary", @id = "Bordear" })
+</p>
+<br />
+<div>
+    <div class="form-inline">
+        @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarNumero", @placeholder = "Numero Factura" } })
+        @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarFecha", @placeholder = "Por Fecha" } })
+        @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarCliente", @placeholder = "Nombre Cliente" } })
+    </div>
+</div>
+<hr />
+<div class="table-responsive">
+    <table id="MyData" data-page-length="10">
+        <thead>
+
+            <tr>
+                <th>
+                    Numero Factura
+                </th>
+                <th>
+                    Nombre Cliente
+                </th>
+                <th>
+                    Fecha Orden
+                </th>
+                <th>
+                    Total Orden
+                </th>
+                <th>
+                    Cantidad  Pagada
+                </th>
+                <th>
+                    Cantidad Pendiente
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VentaId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem =>item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalOrden)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CantidadPagada)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CantidadPendiente)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" })
+                        @Html.ActionLink("Detalles", "Details", new { id = item.VentaId }, new { @class = "btn btn-info", @id = "Bordear" })
+                        @Html.ActionLink("Borrar", "Delete", new { id = item.VentaId }, new { @class = "btn btn-danger", @id = "Bordear" })
+                    </td>
 
 
-    <table class="table">
-        <tr>
-            <th>
-                Nombre Cliente
-            </th>
-            <th>
-                Fecha Orden
-            </th>
-            <th>
-                Total Orden
-            </th>
-            <th>
-                Cantidad  Pagada
-            </th>
-            <th>
-                Cantidad Pendiente
-            </th>
 
-            <th></th>
-        </tr>
+                </tr>
+            }
 
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalOrden)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CantidadPagada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CantidadPendiente)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.VentaId }, new { @class = "btn btn-warning", @id = "Bordear" })
-                @Html.ActionLink("Detalles", "Details", new { id = item.VentaId }, new { @class = "btn btn-info", @id = "Bordear" })
-                @Html.ActionLink("Borrar", "Delete", new { id = item.VentaId }, new { @class = "btn btn-danger", @id = "Bordear" })
-            </td>
-
-
-
-        </tr>
-        }
-
+        </tbody>
     </table>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*<script>
+        //$(document).ready(function () {
+
+        //    $('#oTable').DataTable();
 
 
+        //});
+
+
+        $(document).ready(function () {
+            var oTableModal = $('.tableModal0').DataTable({
+                "language": {
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "search": "Buscar",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 datos    ",
+                    "infoFiltered": "(filtrar de _MAX_ datos totales)",
+                    "lengthMenu": "Mostrar _MENU_ datos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "zeroRecords": "Ningun registro coincide",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "dom": 'lBrtip',
+                buttons: ['print',
+
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+        });
+
+
+        $('.buscarModal0').keyup(function () {
+            debugger;
+
+            oTableModal.columns(1).search($(this).val().trim());
+
+            oTableModal.draw();
+
+        });
+
+        $('.buscar1').keyup(function () {
+            debugger;
+            oTable.columns(1).search($('.buscar1').val().trim());
+            oTable1.columns(1).search($('.buscar1').val().trim());
+            oTable2.columns(1).search($('.buscar1').val().trim());
+
+            oTable.draw();
+            oTable1.draw();
+            oTable2.draw();
+        });
+    </script>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+        var Mydata=   $('#MyData').DataTable({
+                    "language": {
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                        "search": "Buscar",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 datos    ",
+                        "infoFiltered": "(filtrar de _MAX_ datos totales)",
+                        "lengthMenu": "Mostrar _MENU_ datos",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "zeroRecords": "Ningun registro coincide",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Último",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+                    "dom": 'lBrtip',
+                    buttons: ['print',
+
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5'
+                    ]
+                });
+
+        //    var table = $('#MyData').DataTable();
+
+        //    $('.buscarModal0').on('keyup', function () {
+        //        debugger;
+        //        table.columns(0).search($('.buscarModal0').val().trim());
+        ////    $('#MyData').draw();
+        //        table.draw();
+        //       // table.search(this.val).draw();
+        //    });
+            $('.buscarNumero').keyup(function () {
+                debugger;
+                Mydata.columns(0).search($('.buscarNumero').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
+            $('.buscarFecha').keyup(function () {
+                debugger;
+                Mydata.columns(2).search($('.buscarFecha').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
+            $('.buscarCliente').keyup(function () {
+                debugger;
+                Mydata.columns(1).search($('.buscarCliente').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
+            
+        });
+
+
+      
+
+      
+        
+    </script>
+}

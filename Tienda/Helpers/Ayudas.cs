@@ -27,7 +27,11 @@ namespace Tienda.Helpers
                 {
                     Add(2, "Tarjeta");
                 }
-             
+                if (!FindByName("Tranferencia"))
+                {
+                    Add(3, "Tranferencia");
+                }
+
             }
             catch (Exception)
             {

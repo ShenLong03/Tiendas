@@ -23,7 +23,7 @@ namespace Tienda.Controllers
             if (Session["UsuarioLogin"] != null)
             {
 
-                var productos = db.Productos.Include(p => p.DetalleVentas);
+                var productos = db.Productos.Include(p => p.DetalleVentas).OrderByDescending(q => q.ProductoId);
                 return View(await productos.ToListAsync());
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }

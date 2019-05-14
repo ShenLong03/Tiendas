@@ -620,7 +620,7 @@ namespace Tienda.Controllers
             DetalleVentas detalleVentas = await db.DetalleVentas.FindAsync(id);
             db.DetalleVentas.Remove(detalleVentas);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details","Ventas", new { id = detalleVentas.VentaId });
         }
         #endregion
 
@@ -681,37 +681,37 @@ namespace Tienda.Controllers
 
                     Ventas venta = db.Ventas.Find(view.VentaId);
 
-                    venta.CantidadPagada = view.Monto;
+                    venta.CantidadPagada = pago.Monto;
                     venta.CantidadPendiente = venta.TotalOrden - venta.CantidadPagada;
 
                     db.Entry(venta).State = EntityState.Modified;
                     db.SaveChanges();
-                    var Datos = (from v in db.Ventas
-                                 join dv in db.DetalleVentas on v.VentaId equals dv.VentaId
-                                 join pv
-        in db.Productos on dv.ProductoId equals pv.ProductoId
-                                 where v.VentaId == view.VentaId
-                                 select new { v.VentaId, v.Nombre, v.TotalOrden, v.Fecha, dv.Cantidad, dv.Descuento, dv.Precio, pv.Descripcion, pv.Talla }).ToList();
+        //            var Datos = (from v in db.Ventas
+        //                         join dv in db.DetalleVentas on v.VentaId equals dv.VentaId
+        //                         join pv
+        //in db.Productos on dv.ProductoId equals pv.ProductoId
+        //                         where v.VentaId == view.VentaId
+        //                         select new { v.VentaId, v.Nombre, v.TotalOrden, v.Fecha, dv.Cantidad, dv.Descuento, dv.Precio, pv.Descripcion, pv.Talla }).ToList();
 
 
 
-                    LocalReport rdlc = new LocalReport();//importante
-                                                         //rdlc.ReportPath = @"C:\Users\BRAINER\Documents\Proyectos2019\Tiendas\Tienda\Reportes\Report2.rdlc";//direccion absoluta del reporte, es muy importante a la hora de ponerlo en funcionamiento.
-                    rdlc.ReportPath = @"~..\..\Reportes\Report2.rdlc";                                                                                                  // si os da algun error puede ser por no encontrar la direccion exacta del reporte, creedme ya lo pase.
-                    rdlc.ReportEmbeddedResource = "Tienda.Reportes.Report1.rdlc";
-                    // las siguientes lineas son los datos que nesecito para mi reporte.
-                    // DataTable customer = CDetalleVenta.Mostrar((int)id_now);
-                    rdlc.DataSources.Add(new ReportDataSource("DataVentasDetalle", Datos));
-                    //DataTable venta2 = CVenta.MostrarID(id_now);
-                    //DataTable infomacion = CEmpresa.Mostrar();
-                    //DataTable cliente = CCliente.MostrarID(venta2.Rows[0]["idCliente"].ToString());
-                    //los parametros dento de mi report.rdlc
-                    //ReportParameter nombre = new ReportParameter("nombre_cliente", cliente.Rows[0]["nombre"].ToString());
-                    //ReportParameter fecha = new ReportParameter("fecha", venta2.Rows[0]["fecVenta"].ToString());
-                    //rdlc.SetParameters(new ReportParameter[] { nombre, fecha });
-                    // instancio un objeto dentro de la clase Impresor
-                    Impresor impresor = new Impresor();
-                    impresor.Imprime(rdlc);
+        //            LocalReport rdlc = new LocalReport();//importante
+        //                                                 //rdlc.ReportPath = @"C:\Users\BRAINER\Documents\Proyectos2019\Tiendas\Tienda\Reportes\Report2.rdlc";//direccion absoluta del reporte, es muy importante a la hora de ponerlo en funcionamiento.
+        //            rdlc.ReportPath = @"~..\..\Reportes\Report2.rdlc";                                                                                                  // si os da algun error puede ser por no encontrar la direccion exacta del reporte, creedme ya lo pase.
+        //            rdlc.ReportEmbeddedResource = "Tienda.Reportes.Report1.rdlc";
+        //            // las siguientes lineas son los datos que nesecito para mi reporte.
+        //            // DataTable customer = CDetalleVenta.Mostrar((int)id_now);
+        //            rdlc.DataSources.Add(new ReportDataSource("DataVentasDetalle", Datos));
+        //            //DataTable venta2 = CVenta.MostrarID(id_now);
+        //            //DataTable infomacion = CEmpresa.Mostrar();
+        //            //DataTable cliente = CCliente.MostrarID(venta2.Rows[0]["idCliente"].ToString());
+        //            //los parametros dento de mi report.rdlc
+        //            //ReportParameter nombre = new ReportParameter("nombre_cliente", cliente.Rows[0]["nombre"].ToString());
+        //            //ReportParameter fecha = new ReportParameter("fecha", venta2.Rows[0]["fecVenta"].ToString());
+        //            //rdlc.SetParameters(new ReportParameter[] { nombre, fecha });
+        //            // instancio un objeto dentro de la clase Impresor
+        //            Impresor impresor = new Impresor();
+        //            impresor.Imprime(rdlc);
                 }
                 return RedirectToAction("Index");
             }
@@ -771,16 +771,28 @@ namespace Tienda.Controllers
             }
             var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
             double totalBruto = 0;
-            foreach (var item in facturas)
+            double totalEfectivo = 0;
+            double totaltarjeta = 0;
+            double totaltrans = 0;
+                foreach (var item in facturas)
             {
                 totalBruto = totalBruto + item.DetalleVentas.Sum(d => d.Subtotal);
+                    foreach (var items in item.Pagos)
+                    {
+                        if (items.MedioPagoId==1) { totalEfectivo = totalEfectivo + items.Monto; }
+                        if (items.MedioPagoId == 2) { totaltarjeta = totaltarjeta + items.Monto; }
+                        if (items.MedioPagoId == 3) { totaltrans = totaltrans + items.Monto; }
+                    } 
+
             }
 
             ViewBag.FechaInicial = FechaInicial;
             ViewBag.FechaFinal = FechaFinal;
             ViewBag.Total = totalBruto;
-           
-            return View(facturas.OrderByDescending(f=>f.VentaId));
+            ViewBag.TotalEfectivo = totalEfectivo;
+            ViewBag.Totaltarjeta = totaltarjeta;
+            ViewBag.Totaltrans = totaltrans;
+                return View(facturas.OrderByDescending(f=>f.VentaId));
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }

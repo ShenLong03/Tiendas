@@ -112,7 +112,11 @@
 
                       success: function (data) {
                           debugger;
-                          $('#Precio').val(data);
+                          $('#Precio').val(data.Precio);
+                          // $('#prueba').val(data.Foto);
+                          // document.getElementById('prueba').src = "~/images/user.png";
+
+                          $("#Imagen").attr("src", "" + data.FotoFull);
 
 
                       },

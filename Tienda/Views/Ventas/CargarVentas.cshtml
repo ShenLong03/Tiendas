@@ -14,116 +14,128 @@
 @using (Html.BeginForm())
 {
 
-<div class="form-inline">
-    @*<label>Desde</label>
-        <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
-        <label>Hasta</label>
-        <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />*@
-
-
-    <div class="form-group">
-        <label>Desde</label>
-        <div class='input-group date' id='fechaInicial'>
-
+    <div class="form-inline">
+        @*<label>Desde</label>
             <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label>Hasta</label>
-        <div class='input-group date' id='fechaFinal'>
+            <label>Hasta</label>
+            <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />*@
 
-            <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
+
+        <div class="form-group">
+            <label>Desde</label>
+            <div class='input-group date' id='fechaInicial'>
+
+                <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
+        <div class="form-group">
+            <label>Hasta</label>
+            <div class='input-group date' id='fechaFinal'>
+
+                <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
     </div>
-    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
-</div>
 }
 <hr />
 
 @if (ViewBag.Total != null)
 {
-    <label>Total Ventas</label>
-    <input id="sFechaFi" name="sFechaF" type="text" value="@ViewBag.Total.ToString()" class="form-control" disabled />
+<div class="form-inline">
+    <div class="form-group">
+        <label>Total Ventas</label>
+        <input id="sFechaFi" name="sFechaF" type="text" value="@ViewBag.Total.ToString()" class="form-control" disabled />
+    </div>
+    <hr />
+    <div class="form-group">
+        <label>Total Efectivo</label>
+        <input id="sFechai" name="sFechF" type="text" value="@ViewBag.TotalEfectivo.ToString()" class="form-control" disabled />
+        <label>Total Tarjetas</label>
+        <input id="sFehaFi" name="sFehaF" type="text" value="@ViewBag.Totaltarjeta.ToString()" class="form-control" disabled />
+        <label>Total Transferencias</label>
+        <input id="sFchaFi" name="sFchaF" type="text" value="@ViewBag.Totaltrans.ToString()" class="form-control" disabled />
+    </div>
 
+</div>
+    }
+    <hr />
 
-}
-<hr />
-
-<div class="table-responsive">
-    <table id="oTable" class="display hover table table-amaru-dark " data-page-length="25">
-        <thead>
-            <tr>
-
-                <th>
-                    Numero Factura
-                </th>
-                <th>
-                    Nombre Cliente
-                </th>
-                <th>
-                    Fecha Factura
-                </th>
-                <th>
-                    Total Orden
-                </th>
-                <th>
-                    Cantidad Pagada
-                </th>
-                <th>Cantidad Pendiente</th>
-
-            </tr>
-        </thead>
-        <tbody>
-
-
-            @foreach (var item in Model)
-            {
-
-
-
+    <div class="table-responsive">
+        <table id="oTable" class="display hover table table-amaru-dark " data-page-length="25">
+            <thead>
                 <tr>
 
-                    <td>
-                        <small>
-                            <a href="@Url.Action("Edit", new { id = item.VentaId })"><i class="text-muted icon-pencil"></i></a>
-                        </small>
-                        &nbsp;<a href="@Url.Action("Details", new { id = item.VentaId })">@item.VentaId</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Fecha)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TotalOrden)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CantidadPagada)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CantidadPendiente)
-                    </td>
-
+                    <th>
+                        Numero Factura
+                    </th>
+                    <th>
+                        Nombre Cliente
+                    </th>
+                    <th>
+                        Fecha Factura
+                    </th>
+                    <th>
+                        Total Orden
+                    </th>
+                    <th>
+                        Cantidad Pagada
+                    </th>
+                    <th>Cantidad Pendiente</th>
 
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
- 
-    <script>
-        $(function () {
-            $('#fechaInicial').datetimepicker({format:"DD/MM/YYYY"});
-            $('#fechaFinal').datetimepicker({ format: "DD/MM/YYYY" });
-        });
-    </script>
-}
+            </thead>
+            <tbody>
+
+
+                @foreach (var item in Model)
+                {
+
+
+
+                    <tr>
+
+                        <td>
+                            <small>
+                                <a href="@Url.Action("Edit", new { id = item.VentaId })"><i class="text-muted icon-pencil"></i></a>
+                            </small>
+                            &nbsp;<a href="@Url.Action("Details", new { id = item.VentaId })">@item.VentaId</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Fecha)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalOrden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CantidadPagada)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CantidadPendiente)
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+
+        <script>
+            $(function () {
+                $('#fechaInicial').datetimepicker({ format: "DD/MM/YYYY" });
+                $('#fechaFinal').datetimepicker({ format: "DD/MM/YYYY" });
+            });
+        </script>
+    }
