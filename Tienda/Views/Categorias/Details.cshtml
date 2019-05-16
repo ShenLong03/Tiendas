@@ -1,0 +1,44 @@
+﻿@model Domain.Categorias
+
+@{
+    ViewBag.Title = "Details";
+}
+<link href="~/Css/Paginas.css" rel="stylesheet" />
+<h2>Detalles Categoria</h2>
+
+<hr />
+
+<div>
+  
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Prefijo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Prefijo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a class="btn Bordear  btn-warning" id="" href="@Url.Action("Edit", new { id = Model.CategoriaId })">Volver a Editar</a>
+    <a class="btn Bordear  btn-info" id="" href="@Url.Action("Index")">Volver a Lista</a>
+
+</div>

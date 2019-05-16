@@ -1,0 +1,52 @@
+﻿@model Domain.Categorias
+
+@{
+    ViewBag.Title = "Delete";
+}
+<link href="~/Css/Paginas.css" rel="stylesheet" />
+<h2>Borrar Categoria</h2>
+
+<h3>Esta seguro de Borrar Esta?</h3>
+
+<hr />
+<div>
+    <h4>Categorias</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Prefijo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Prefijo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Borrar" id="" class="btn Bordear  btn-danger" /> 
+            <a class="btn Bordear  btn-info" id="" href="@Url.Action("Index")">Volver a Lista</a>
+        </div>
+    }
+</div>

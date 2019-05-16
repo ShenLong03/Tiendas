@@ -50,7 +50,9 @@ namespace Domain
 
         public DbSet<DetalleVentas> DetalleVentas { get; set; }
 
-    
+        public System.Data.Entity.DbSet<Domain.Categorias> Categorias { get; set; }
+
+
 
 
         //public virtual ObjectResult<sp_CargarDataFacuras_Result> sp_CargarDataFacuras(Nullable<int> idVenta)

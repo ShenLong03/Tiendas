@@ -25,6 +25,8 @@ namespace Domain
 
         public double Precio { get; set; } = 0;
 
+        public int CategoriaId { get; set; }
+
         public double Cantidad { get; set; } = 0;
 
         [NotMapped]
@@ -36,6 +38,8 @@ namespace Domain
         public string FotoFull { get { return string.Concat(WebConfigurationManager.AppSettings["URL"], Foto.Substring(1)); } }
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
+
+        public virtual Categorias Categorias { get; set; }
 
     }
 }

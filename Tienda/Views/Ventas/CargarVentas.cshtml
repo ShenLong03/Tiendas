@@ -15,11 +15,7 @@
 {
 
     <div class="form-inline">
-        @*<label>Desde</label>
-            <input id="sFechaInicial" name="sFechaInicial" type="text" value="@ViewBag.FechaInicial.ToString("dd/MM/yyyy")" class="form-control" />
-            <label>Hasta</label>
-            <input id="sFechaFinal" name="sFechaFinal" type="text" value="@ViewBag.FechaFinal.ToString("dd/MM/yyyy")" class="form-control" />*@
-
+     
 
         <div class="form-group">
             <label>Desde</label>
@@ -41,101 +37,168 @@
                 </span>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+        <button type="submit" class="btn Bordear  btn-primary"><span class="glyphicon glyphicon-search"></span></button>
     </div>
 }
 <hr />
 
 @if (ViewBag.Total != null)
 {
-<div class="form-inline">
-    <div class="form-group">
-        <label>Total Ventas</label>
-        <input id="sFechaFi" name="sFechaF" type="text" value="@ViewBag.Total.ToString()" class="form-control" disabled />
-    </div>
-    <hr />
-    <div class="form-group">
-        <label>Total Efectivo</label>
-        <input id="sFechai" name="sFechF" type="text" value="@ViewBag.TotalEfectivo.ToString()" class="form-control" disabled />
-        <label>Total Tarjetas</label>
-        <input id="sFehaFi" name="sFehaF" type="text" value="@ViewBag.Totaltarjeta.ToString()" class="form-control" disabled />
-        <label>Total Transferencias</label>
-        <input id="sFchaFi" name="sFchaF" type="text" value="@ViewBag.Totaltrans.ToString()" class="form-control" disabled />
-    </div>
+    <div class="form-inline">
+        <div class="form-group">
+            <label>Total Ventas</label>
+            <input id="sFechaFi" name="sFechaF" type="text" value="@ViewBag.Total.ToString()" class="form-control" disabled />
+        </div>
+        <hr />
+        <div class="form-group">
+            <label>Total Efectivo</label>
+            <input id="sFechai" name="sFechF" type="text" value="@ViewBag.TotalEfectivo.ToString()" class="form-control" disabled />
+            <label>Total Tarjetas</label>
+            <input id="sFehaFi" name="sFehaF" type="text" value="@ViewBag.Totaltarjeta.ToString()" class="form-control" disabled />
+            <label>Total Transferencias</label>
+            <input id="sFchaFi" name="sFchaF" type="text" value="@ViewBag.Totaltrans.ToString()" class="form-control" disabled />
+        </div>
 
+    </div>
+}
+<hr />
+
+<div>
+    <div class="form-inline">
+        @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarNumero", @placeholder = "Numero Factura" } })
+
+      
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarCliente", @placeholder = "Nombre Cliente" } })
+    </div>
 </div>
-    }
-    <hr />
+<hr />
+<div class="table-responsive">
+    <table id="MyData" data-page-length="10">
+        <thead>
+            <tr>
 
-    <div class="table-responsive">
-        <table id="oTable" class="display hover table table-amaru-dark " data-page-length="25">
-            <thead>
+                <th>
+                    Numero Factura
+                </th>
+                <th>
+                    Nombre Cliente
+                </th>
+                <th>
+                    Fecha Factura
+                </th>
+                <th>
+                    Total Orden
+                </th>
+                <th>
+                    Cantidad Pagada
+                </th>
+                <th>Cantidad Pendiente</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+
+
+
                 <tr>
 
-                    <th>
-                        Numero Factura
-                    </th>
-                    <th>
-                        Nombre Cliente
-                    </th>
-                    <th>
-                        Fecha Factura
-                    </th>
-                    <th>
-                        Total Orden
-                    </th>
-                    <th>
-                        Cantidad Pagada
-                    </th>
-                    <th>Cantidad Pendiente</th>
+                    <td>
+                        <small>
+                            <a href="@Url.Action("Edit", new { id = item.VentaId })"><i class="text-muted icon-pencil"></i></a>
+                        </small>
+                        &nbsp;<a href="@Url.Action("Details", new { id = item.VentaId })">@item.VentaId</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @item.Fecha.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalOrden)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CantidadPagada)
+                    </td>
+                    <td>
+                        @((item.TotalOrden - item.Pagos.Sum(p => p.Monto)).ToString("C2"))
+                    </td>
+
 
                 </tr>
-            </thead>
-            <tbody>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 
+    <script>
+        $(function () {
+            $('#fechaInicial').datetimepicker({ format: "DD/MM/YYYY" });
+            $('#fechaFinal').datetimepicker({ format: "DD/MM/YYYY" });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var Mydata = $('#MyData').DataTable({
+                "language": {
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "search": "Buscar",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 datos    ",
+                    "infoFiltered": "(filtrar de _MAX_ datos totales)",
+                    "lengthMenu": "Mostrar _MENU_ datos",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "zeroRecords": "Ningun registro coincide",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "dom": 'Brtip',
+                "order": [[0, "desc"]],
+                buttons: ['print',
 
-                @foreach (var item in Model)
-                {
-
-
-
-                    <tr>
-
-                        <td>
-                            <small>
-                                <a href="@Url.Action("Edit", new { id = item.VentaId })"><i class="text-muted icon-pencil"></i></a>
-                            </small>
-                            &nbsp;<a href="@Url.Action("Details", new { id = item.VentaId })">@item.VentaId</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nombre)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Fecha)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalOrden)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CantidadPagada)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CantidadPendiente)
-                        </td>
-
-
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-
-        <script>
-            $(function () {
-                $('#fechaInicial').datetimepicker({ format: "DD/MM/YYYY" });
-                $('#fechaFinal').datetimepicker({ format: "DD/MM/YYYY" });
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
             });
-        </script>
-    }
+
+            $('.buscarNumero').keyup(function () {
+                debugger;
+                Mydata.columns(0).search($('.buscarNumero').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
+          
+            $('.buscarCliente').keyup(function () {
+                debugger;
+                Mydata.columns(1).search($('.buscarCliente').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
+
+        });
+
+
+
+
+
+
+    </script>
+}

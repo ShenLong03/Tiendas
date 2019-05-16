@@ -1,4 +1,4 @@
-﻿@model Domain.Productos
+﻿@model Tienda.Models.ProductosViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -18,8 +18,8 @@
 
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 col-xs-12">
+        @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "control-label col-md-2 col-xs-12" })
+        <div class="col-md-3 col-xs-8">
             <div class="file-input-new">
                 <div class="input-group">
                     <div tabindex="500" class="form-control file-caption">
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="input-group-btn" style="height:auto">
-                        <div tabindex="500" class="btn btn-file raised-button btn-amaru-dark waves-effec">
+                        <div tabindex="500" class="btn   btn-file  btn-primary" style="width:20px;">
                             <i class="glyphicon glyphicon-folder-open"></i>
                             @Html.TextBoxFor(modelo => modelo.FotoFile, new { type = "file", id = "files" })
                             @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
@@ -35,6 +35,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CategoriaId, "Categoria", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            <select id="CategoriaId" name="CategoriaId" class="ui search dropdown form-control">
+                <option value="">Categorias...</option>
+                @foreach (var item in Model.GetCategorias)
+                {
+                    if (Model.CategoriaId > 0 && Model.CategoriaId == item.CategoriaId)
+                    {
+                        <option value="@item.CategoriaId" selected>@item.Nombre</option>
+
+
+                    }
+                    else
+                    {
+                        <option value="@item.CategoriaId">@item.Nombre</option>
+                    }
+                }
+            </select>
+            @Html.ValidationMessageFor(model => model.CategoriaId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
@@ -79,14 +101,14 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" id="Bordear" value="Crear" class="btn btn-primary" />
+            <input type="submit" id="" value="Crear" class="btn Bordear  btn-primary" />
         </div>
     </div>
 </div>
 }
 
 <div>
-    <a class="btn btn-info" id="Bordear" href="@Url.Action("Index")">Volver a Lista</a>
+    <a class="btn Bordear  btn-info" id="" href="@Url.Action("Index")">Volver a Lista</a>
 </div>
 
 @section Scripts {

@@ -83,41 +83,33 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">Foto</label> 
-                    <div class="col-md-10">
-                        @if (!string.IsNullOrEmpty(Model.Foto))
-                        {
-                            <center>
-                                <img id="Imagen" src="@Url.Content(Model.Foto)" class="img-mid imagen-increase-big" />
-                            </center>
-                        }
-                        else
-                        {
-                            <center>
-                                <img id="Imagen"src="~/images/user.png" class="img-mid imagen-increase-big" />
-                           </center>
-                        }
+                <div class="hidden-sm hidden-xs visible-lg visible-md form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" id="" value="Agregar" class="btn Bordear  btn-primary" />
+                        @Html.ActionLink("Volver Detalles", "Details", new { id = Model.VentaId }, new { @class = "btn Bordear btn-info" })
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.Foto))
+            {
 
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
+                <img id="Imagen" src="@Url.Content(Model.Foto)" style="width:50% ;height:auto; max-height:300px" />
 
-
-                        <input type="submit" id="Bordear" value="Agregar" class="btn btn-primary" />
-
-
-
-
-
-
-
-
-
-
-                        @Html.ActionLink("Volver Detalles", "Details", new { id = Model.VentaId }, new { @class = "btn btn-info", @id = "Bordear" })
-                    </div>
+            }
+            else
+            {
+                <center>
+                    <img id="Imagen" src="~/images/user.png" />
+                </center>
+            }
+        </div>
+        <div class="hidden-md hidden-lg visible-xs visible-sm  form-horizontal">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" id="" value="Agregar" class="btn Bordear  btn-primary" />
+                    @Html.ActionLink("Volver Detalles", "Details", new { id = Model.VentaId }, new { @class = "btn Bordear btn-info" })
                 </div>
             </div>
         </div>

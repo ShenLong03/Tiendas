@@ -96,12 +96,39 @@ namespace Tienda.Controllers
 
 
         // GET: Ventas
-        public async Task<ActionResult> Index()
-        {
-           if( Session["UsuarioLogin"] !=null){ 
-            Ayudas.CheckMediosPagos();
-            var ventas = db.Ventas.Include(v => v.Cliente).OrderByDescending(q=>q.VentaId);
+        public async Task<ActionResult> Index(string sFechaInicial, string sFechaFinal,int? Validar)
+         {
+           if( Session["UsuarioLogin"] !=null){
+                DateTime FechaInicial = DateTime.Today;
+                DateTime FechaFinal = DateTime.Today.AddHours(23).AddMinutes(59);
+                if (!string.IsNullOrEmpty(sFechaInicial))
+                {
+                    FechaInicial = DateTime.ParseExact(sFechaInicial, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                }
+                if (!string.IsNullOrEmpty(sFechaFinal))
+                {
+                    FechaFinal = DateTime.ParseExact(sFechaFinal, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    FechaFinal = FechaFinal.AddHours(23).AddMinutes(59);
+
+                }
+                
+
+                ViewBag.FechaInicial = FechaInicial;
+                ViewBag.FechaFinal = FechaFinal;
+                if (sFechaFinal==null) { 
+                Ayudas.CheckMediosPagos();
+
+            var ventas = db.Ventas.Include(v => v.Pagos).Where(v=>v.Fecha==DateTime.Today||v.CantidadPendiente>0).OrderByDescending(q=>q.VentaId);
             return View(await ventas.ToListAsync());
+                }
+                if (Validar==1)
+                {
+                    var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal&&f.CantidadPendiente>0).ToList();
+                    return View(facturas.OrderByDescending(f => f.VentaId));
+                } else {
+                    var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
+                    return View(facturas.OrderByDescending(f => f.VentaId));
+                }
             }
             else
             {
@@ -675,17 +702,20 @@ namespace Tienda.Controllers
 
                
                var pago= ToPago(view);
-                pago.Monto -= view.Vuelto;
-                db.Pagos.Add(pago);
-                await db.SaveChangesAsync();
+                    if (view.Vuelto >= 0)
+                    {
+                        pago.Monto -= view.Vuelto;
+                        db.Pagos.Add(pago);
+                        await db.SaveChangesAsync();
 
-                    Ventas venta = db.Ventas.Find(view.VentaId);
+                        Ventas venta = db.Ventas.Find(view.VentaId);
 
-                    venta.CantidadPagada = pago.Monto;
-                    venta.CantidadPendiente = venta.TotalOrden - venta.CantidadPagada;
+                        venta.CantidadPagada = pago.Monto;
+                        venta.CantidadPendiente = venta.TotalOrden - venta.CantidadPagada;
 
-                    db.Entry(venta).State = EntityState.Modified;
-                    db.SaveChanges();
+                        db.Entry(venta).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
         //            var Datos = (from v in db.Ventas
         //                         join dv in db.DetalleVentas on v.VentaId equals dv.VentaId
         //                         join pv

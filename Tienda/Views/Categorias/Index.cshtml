@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Domain.Categorias>
+
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/Css/Paginas.css" rel="stylesheet" />
+<h2>Mantenimiento Categorias</h2>
+
+<p>
+    <a class="btn Bordear  btn-primary" id="" href="@Url.Action("Create")">Crear</a>
+</p>
+<br />
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prefijo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activo)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Prefijo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activo)
+                    </td>
+                    <td>
+                        <a class="btn Bordear  btn-warning" id="" href="@Url.Action("Edit", new { id = item.CategoriaId })">  Editar</a>
+
+                        <a class="btn Bordear  btn-info" id="" href="@Url.Action("Details", new { id = item.CategoriaId })"> Detalles</a>
+
+                        <a class="btn Bordear  btn-danger" id="" href="@Url.Action("Delete", new { id = item.CategoriaId })"> Borrar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

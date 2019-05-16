@@ -156,6 +156,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CategoriasController.cs" />
     <Compile Include="Controllers\DetalleVentasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Models\DataContextLocal.cs" />
     <Compile Include="Models\DetalleVentaViewModel.cs" />
     <Compile Include="Models\PagoViewModel.cs" />
+    <Compile Include="Models\ProductosViewModel.cs" />
     <Compile Include="Models\VentaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Prueba.aspx.cs">
@@ -780,6 +782,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <Content Include="Scripts\datatables.extensions\Responsive\Readme.md" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Facturas\FacturaJS.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -882,6 +885,12 @@
     <Content Include="Views\Ventas\DeleteDetalleVenta.cshtml" />
     <Content Include="Views\Ventas\CargarVentas.cshtml" />
     <Content Include="Views\Ventas\Login.cshtml" />
+    <Content Include="Views\Categorias\Create.cshtml" />
+    <Content Include="Views\Categorias\Delete.cshtml" />
+    <Content Include="Views\Categorias\Details.cshtml" />
+    <Content Include="Views\Categorias\Edit.cshtml" />
+    <Content Include="Views\Categorias\Index.cshtml" />
+    <Content Include="Views\Productos\PruebaIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

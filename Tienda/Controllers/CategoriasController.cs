@@ -3,34 +3,30 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Domain;
-using Tienda.Helpers;
 using Tienda.Models;
 
 namespace Tienda.Controllers
 {
-    public class ProductosController : Controller
+    public class CategoriasController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
 
-        // GET: Productos
-        public async Task<ActionResult> Index()
+        // GET: Categorias
+        public ActionResult Index()
         {
             if (Session["UsuarioLogin"] != null)
             {
-
-                var productos = db.Productos.Include(p => p.DetalleVentas).Include(c=>c.Categorias).OrderByDescending(q => q.ProductoId);
-                return View(await productos.ToListAsync());
+                return View(db.Categorias.ToList());
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
-        // GET: Productos/Details/5
-        public async Task<ActionResult> Details(int? id)
+        // GET: Categorias/Details/5
+        public ActionResult Details(int? id)
         {
             if (Session["UsuarioLogin"] != null)
             {
@@ -38,66 +34,45 @@ namespace Tienda.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                Productos productos = await db.Productos.FindAsync(id);
-                if (productos == null)
+                Categorias categorias = db.Categorias.Find(id);
+                if (categorias == null)
                 {
                     return HttpNotFound();
                 }
-                return View(productos);
+                return View(categorias);
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
-        // GET: Productos/Create
+        // GET: Categorias/Create
         public ActionResult Create()
-
-       {
-
+        {
             if (Session["UsuarioLogin"] != null)
             {
-                return View(new ProductosViewModel
-                {
-                    
-                    GetCategorias = db.Categorias.ToList()
-                });
-               
+                return View();
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
-        // POST: Productos/Create
+        // POST: Categorias/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create( Productos productos)
+        public ActionResult Create(Categorias categorias)
         {
             if (ModelState.IsValid)
             {
-                var pic = string.Empty;
-                var folder = "~/Content/Productos";
-
-                if (productos.FotoFile != null)
-                {
-                    pic = FilesHelper.UploadPhoto(productos.FotoFile, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);
-                }
-
-                productos.Foto = pic;
-                //Productos producto = new Productos();
-                
-                //producto.Foto = pic;
-                db.Productos.Add(productos);
-                await db.SaveChangesAsync();
+                db.Categorias.Add(categorias);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-           
-            return View(productos);
+            return View(categorias);
         }
 
-        // GET: Productos/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        // GET: Categorias/Edit/5
+        public ActionResult Edit(int? id)
         {
             if (Session["UsuarioLogin"] != null)
             {
@@ -105,62 +80,59 @@ namespace Tienda.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                Productos productos = await db.Productos.FindAsync(id);
-                if (productos == null)
+                Categorias categorias = db.Categorias.Find(id);
+                if (categorias == null)
                 {
                     return HttpNotFound();
                 }
-
-                return View(productos);
+                return View(categorias);
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
-        // POST: Productos/Edit/5
+        // POST: Categorias/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Productos productos)
+        public ActionResult Edit( Categorias categorias)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(productos).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                db.Entry(categorias).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-           
-            return View(productos);
+            return View(categorias);
         }
 
-        // GET: Productos/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: Categorias/Delete/5
+        public ActionResult Delete(int? id)
         {
-
             if (Session["UsuarioLogin"] != null)
             {
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                Productos productos = await db.Productos.FindAsync(id);
-                if (productos == null)
+                Categorias categorias = db.Categorias.Find(id);
+                if (categorias == null)
                 {
                     return HttpNotFound();
                 }
-                return View(productos);
+                return View(categorias);
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
-        // POST: Productos/Delete/5
+        // POST: Categorias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Productos productos = await db.Productos.FindAsync(id);
-            db.Productos.Remove(productos);
-            await db.SaveChangesAsync();
+            Categorias categorias = db.Categorias.Find(id);
+            db.Categorias.Remove(categorias);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

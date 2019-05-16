@@ -7,16 +7,16 @@
 <h2>Mantenimiento Articulos</h2>
 
 <p>
-    <a class="btn btn-primary" id="Bordear" href="@Url.Action("Create")">Crear</a>
+    <a class="btn Bordear  btn-primary" id="" href="@Url.Action("Create")">Crear</a>
 </p>
 <br />
 <div>
     <div class="form-inline">
         @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
         @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarCodigo", @placeholder = "Codigo Articulo" } })
-        @Html.Label("Buscar", htmlAttributes: new { @class = "control-label" })
+
         @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarDescripcion", @placeholder = "Descripcion" } })
-       
+        @Html.Editor(" ", new { htmlAttributes = new { @class = "form-control buscarCategoria", @placeholder = "Categoria" } })
     </div>
 </div>
 <hr />
@@ -32,6 +32,9 @@
 
                 <th>
                     @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Categorias.Nombre)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Talla)
@@ -61,6 +64,9 @@
                     @Html.DisplayFor(modelItem => item.Descripcion)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Categorias.Nombre)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Talla)
                 </td>
                 <td>
@@ -84,11 +90,11 @@
                     }
                 </td>
                 <td>
-                    <a class="btn btn-warning" id="Bordear" href="@Url.Action("Edit", new { id = item.ProductoId })">  Editar</a>
+                    <a class="btn Bordear  btn-warning" id="" href="@Url.Action("Edit", new { id = item.ProductoId })">  Editar</a>
 
-                    <a class="btn btn-info" id="Bordear" href="@Url.Action("Details", new { id = item.ProductoId })"> Detalles</a>
+                    <a class="btn Bordear  btn-info" id="" href="@Url.Action("Details", new { id = item.ProductoId })"> Detalles</a>
 
-                    <a class="btn btn-danger" id="Bordear" href="@Url.Action("Delete", new { id = item.ProductoId })"> Borrar</a>
+                    <a class="btn Bordear  btn-danger" id="" href="@Url.Action("Delete", new { id = item.ProductoId })"> Borrar</a>
 
                 </td>
             </tr>
@@ -120,7 +126,7 @@
                         "previous": "Anterior"
                     }
                 },
-                "dom": 'lBrtip',
+                "dom": 'Brtip',
                 buttons: ['print',
 
                     'excelHtml5',
@@ -148,7 +154,15 @@
                 Mydata.draw();
             });
            
-
+            $('.buscarCategoria').keyup(function () {
+                debugger;
+                Mydata.columns(2).search($('.buscarCategoria').val().trim());
+                //  $('#MyData').search($('.buscarModal0').val().trim());
+                //MyData.columns(0).search($('.buscarModal0').val().trim());
+                // $('#MyData').draw();
+                //MyData.draw();
+                Mydata.draw();
+            });
         });
 
 
