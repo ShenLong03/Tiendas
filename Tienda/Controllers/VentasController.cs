@@ -348,7 +348,7 @@ namespace Tienda.Controllers
         {
 
 
-            detalleVenta = ToProducto(detalleVenta);
+            detalleVenta = ToProductos(detalleVenta);
 
             try
             {
@@ -445,6 +445,7 @@ namespace Tienda.Controllers
                 }
                 ViewBag.Mensaje = Mensaje;
                 var Foto = db.Productos.Where(q => q.ProductoId == 1).FirstOrDefault().Foto;
+                var Categorias = db.Productos.ToList();
                 return View(new DetalleVentaViewModel
                 {
                     VentaId = ventas.VentaId,
@@ -492,7 +493,14 @@ namespace Tienda.Controllers
             {
                 var  detalleVenta = ToDetalleVenta(detalleVentas);
                 detalleVenta = ToProducto(detalleVenta);
+                if (detalleVenta.ProductoId == 0)
+                {
+                    ViewBag.Mensaje = "Articulo No Existe, Codigo Incorrecto ";
 
+                    return RedirectToAction("Details", new { id = detalleVentas.VentaId, Mensaje = ViewBag.Mensaje });
+
+                    
+                }
                 if (detalleVenta.Cantidad > 0)
                 {
                     db.DetalleVentas.Add(detalleVenta);
@@ -528,6 +536,7 @@ namespace Tienda.Controllers
 
             try
             {
+                if (db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId).ToList().Count>0) {
                var Producto= db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId).First();
                 detalleVentas.ProductoId = Producto.ProductoId;
                 detalleVentas.Precio = Producto.Precio;
@@ -550,6 +559,11 @@ namespace Tienda.Controllers
                 }
 
                 return detalleVentas;
+                }
+                else
+                {
+                    detalleVentas.ProductoId = 0;
+                    return detalleVentas; }
             }
             catch (Exception)
             {
@@ -557,7 +571,43 @@ namespace Tienda.Controllers
                 return detalleVentas;
             }
         }
+        private DetalleVentas ToProductos(DetalleVentas detalleVentas)
+        {
 
+            try
+            {
+                
+                    var Producto = db.Productos.Where(p => p.ProductoId == detalleVentas.ProductoId).First();
+                    detalleVentas.ProductoId = Producto.ProductoId;
+                    detalleVentas.Precio = Producto.Precio;
+                    if ((Producto.Cantidad - detalleVentas.Cantidad) >= 0)
+                    {
+
+
+
+                        Producto.Cantidad = Producto.Cantidad - detalleVentas.Cantidad;
+                        db.Entry(Producto).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+
+                        detalleVentas.Cantidad = 0;
+                        return detalleVentas;
+
+
+                    }
+
+                    return detalleVentas;
+                
+                
+            }
+            catch (Exception)
+            {
+
+                return detalleVentas;
+            }
+        }
         // GET: DetalleVentas/Edit/5
         public async Task<ActionResult> EditDetalleVenta(int? id,string Mensaje)
         {

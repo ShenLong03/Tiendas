@@ -34,6 +34,28 @@
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
+                    @Html.LabelFor(model => model.ProductoId, "Categorias", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        <select id="CategoriaId" name="CategoriaId" class="ui search dropdown form-control">
+                            <option value="">Categorias...</option>
+                            @foreach (var item in Model.GetProductos)
+                            {
+                                if (item.CategoriaId > 0)
+                                {
+                                    <option value="@item.CategoriaId" selected>@item.Categorias.Nombre</option>
+
+
+                                }
+                                else
+                                {
+                                    <option value="@item.CategoriaId">@item.Categorias.Nombre</option>
+                                }
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
                     @Html.LabelFor(model => model.ProductoId, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-6">
                         <select id="ProductoId" name="ProductoId" class="ui search dropdown form-control">

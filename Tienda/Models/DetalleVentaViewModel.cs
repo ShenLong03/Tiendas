@@ -9,7 +9,7 @@ namespace Tienda.Models
     public class DetalleVentaViewModel:DetalleVentas
     {
         public List<Productos>GetProductos{ get; set; }
-
+     
         public  string Foto { get; set; }
 
     }
