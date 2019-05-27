@@ -177,7 +177,30 @@
 
 
 
-         });
+        });
+
+
+        $("#CategoriaId").change(function () {
+            $("#ProductoId").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetProductos")',
+                dataType: 'json',
+                data: { CategoriaId: $("#CategoriaId").val() },
+                success: function (productos) {
+                    $("#ProductoId").append('<option value="">Productos...</option>');
+                    $.each(productos, function (i, producto) {
+                        $("#ProductoId").append('<option value="'
+                            + producto.ProductoId + '">'
+                            + producto.Descripcion + '</option>');
+                    });
+                   
+                },
+                error: function (ex) {
+                    alert('Error al mostrar los departamentos.' + ex);
+                }
+            });
+        });
 
         $('#btnAgregar').click(function () {
 

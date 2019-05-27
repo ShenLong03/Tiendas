@@ -1,4 +1,4 @@
-﻿@model Domain.Productos
+﻿@model Tienda.Models.ProductosViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -10,7 +10,7 @@
 
 <hr />
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Productos", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -18,10 +18,14 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ProductoId)
+    @Html.HiddenFor(model => model.CategoriaId)
+    @Html.HiddenFor(model => model.Foto)
+
+
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10 col-xs-12">
+        @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "control-label col-md-2 col-xs-12" })
+        <div class="col-md-3 col-xs-8">
             <div class="file-input-new">
                 <div class="input-group">
                     <div tabindex="500" class="form-control file-caption">
@@ -29,7 +33,7 @@
                         </div>
                     </div>
                     <div class="input-group-btn" style="height:auto">
-                        <div tabindex="500" class="btn Bordear  btn-file raised-button btn-amaru-dark waves-effec">
+                        <div tabindex="500" class="btn   btn-file  btn-primary" style="width:20px;">
                             <i class="glyphicon glyphicon-folder-open"></i>
                             @Html.TextBoxFor(modelo => modelo.FotoFile, new { type = "file", id = "files" })
                             @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
@@ -84,6 +88,7 @@
             <input type="submit" id="" value="Guardar" class="btn Bordear  btn-primary" />
         </div>
     </div>
+
 </div>
 }
 

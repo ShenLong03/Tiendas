@@ -343,6 +343,26 @@ namespace Tienda.Controllers
 
         #region DetalleVenta
 
+
+        public async Task<JsonResult> GetProductos(int CategoriaId)
+        {
+            try
+            {
+                db.Configuration.ProxyCreationEnabled = false;
+                var productos = new List<Productos>();
+
+
+             
+                productos = await db.Productos.Where(p => p.CategoriaId == CategoriaId).ToListAsync();
+                return Json(productos.OrderBy(p => p.ProductoId).ToList(), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> BuscarArticulo(DetalleVentas detalleVenta)
         {
@@ -392,6 +412,7 @@ namespace Tienda.Controllers
         }
 
        
+
         public JsonResult BuscarPrecio(DetalleVentas detalleVenta)
         {
 
@@ -536,8 +557,8 @@ namespace Tienda.Controllers
 
             try
             {
-                if (db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId).ToList().Count>0) {
-               var Producto= db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId).First();
+                if (db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId.ToString()).ToList().Count>0) {
+               var Producto= db.Productos.Where(p => p.CodigoId == detalleVentas.ProductoId.ToString()).First();
                 detalleVentas.ProductoId = Producto.ProductoId;
                 detalleVentas.Precio = Producto.Precio;
                 if ((Producto.Cantidad-detalleVentas.Cantidad) >= 0)
@@ -849,7 +870,7 @@ namespace Tienda.Controllers
                 FechaFinal = FechaFinal.AddHours(23).AddMinutes(59);
 
             }
-            var facturas = db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
+            var facturas =  db.Ventas.Where(f => f.Fecha >= FechaInicial && f.Fecha <= FechaFinal).ToList();
             double totalBruto = 0;
             double totalEfectivo = 0;
             double totaltarjeta = 0;

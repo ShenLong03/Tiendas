@@ -9,5 +9,7 @@ namespace Tienda.Models
     public class ProductosViewModel:Productos
     {
         public List<Categorias> GetCategorias { get; set; }
+
+        public HttpPostedFileBase FotoFile { get; set; }
     }
 }

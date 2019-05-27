@@ -29,6 +29,23 @@ namespace Tienda.Controllers
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
 
+        public JsonResult BuscarPrefijo(int CategoriaId)
+        {
+
+
+            db.Configuration.ProxyCreationEnabled = false;
+            var Categoria = db.Categorias.Find(CategoriaId);
+
+
+
+
+
+            return Json(Categoria.Prefijo, JsonRequestBehavior.AllowGet);
+
+
+
+
+        }
         // GET: Productos/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -68,9 +85,11 @@ namespace Tienda.Controllers
         // POST: Productos/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [HandleError]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create( Productos productos)
+        public async Task<ActionResult> Create(ProductosViewModel productos)
         {
             if (ModelState.IsValid)
             {
@@ -84,10 +103,8 @@ namespace Tienda.Controllers
                 }
 
                 productos.Foto = pic;
-                //Productos producto = new Productos();
-                
-                //producto.Foto = pic;
-                db.Productos.Add(productos);
+                var detalleProducto = ToViewProducto(productos);
+                db.Productos.Add(detalleProducto);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -95,8 +112,45 @@ namespace Tienda.Controllers
            
             return View(productos);
         }
+        private ProductosViewModel ToProductoView(Productos productos)
+        {
+            return new ProductosViewModel
+            {
+                CategoriaId = productos.CategoriaId,
+                Cantidad = productos.Cantidad,
+                CodigoId = productos.CodigoId,
+                Descripcion = productos.Descripcion,
+                Precio = productos.Precio,
+                ProductoId = productos.ProductoId,
+                Foto = productos.Foto,
+                Talla=productos.Talla,
+                
 
+            };
+
+
+        }
+
+        private Productos ToViewProducto(ProductosViewModel productos)
+        {
+            return new Productos
+            {
+                CategoriaId = productos.CategoriaId,
+                Cantidad = productos.Cantidad,
+                CodigoId = productos.CodigoId,
+                Descripcion = productos.Descripcion,
+                Precio = productos.Precio,
+                ProductoId = productos.ProductoId,
+                Foto = productos.Foto,
+                Talla = productos.Talla,
+
+
+            };
+
+
+        }
         // GET: Productos/Edit/5
+        [HandleError]
         public async Task<ActionResult> Edit(int? id)
         {
             if (Session["UsuarioLogin"] != null)
@@ -110,8 +164,8 @@ namespace Tienda.Controllers
                 {
                     return HttpNotFound();
                 }
-
-                return View(productos);
+                var detalleProducto = ToProductoView(productos); 
+                return View(detalleProducto);
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
         }
@@ -119,18 +173,32 @@ namespace Tienda.Controllers
         // POST: Productos/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HandleError]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Productos productos)
+        public async Task<ActionResult> Edit(ProductosViewModel productos)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(productos).State = EntityState.Modified;
+                var pic = string.Empty;
+                var folder = "~/Content/Productos";
+
+                if (productos.FotoFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(productos.FotoFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+
+                productos.Foto = pic;
+
+                var detalleProducto = ToViewProducto(productos);
+
+                db.Entry(detalleProducto).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
            
-            return View(productos);
+            return View();
         }
 
         // GET: Productos/Delete/5

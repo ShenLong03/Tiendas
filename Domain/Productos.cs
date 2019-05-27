@@ -17,7 +17,7 @@ namespace Domain
         public int ProductoId { get; set; }
 
         [Display(Name = "Codigo")]
-        public int? CodigoId { get; set; }
+        public string CodigoId { get; set; }
 
         public string Descripcion { get; set; } = "";
 
@@ -29,8 +29,8 @@ namespace Domain
 
         public double Cantidad { get; set; } = 0;
 
-        [NotMapped]
-        public HttpPostedFileBase FotoFile { get; set; }
+        //[NotMapped]
+        //public HttpPostedFileBase FotoFile { get; set; }
 
         public string Foto { get; set; }
 
