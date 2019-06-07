@@ -38,17 +38,17 @@
                     <div class="col-md-6">
                         <select id="CategoriaId" name="CategoriaId" class="ui search dropdown form-control">
                             <option value="">Categorias...</option>
-                            @foreach (var item in Model.GetProductos)
+                            @foreach (var item in Model.GetCategorias )
                             {
                                 if (item.CategoriaId > 0)
                                 {
-                                    <option value="@item.CategoriaId" selected>@item.Categorias.Nombre</option>
+                                    <option value="@item.CategoriaId" selected>@item.Nombre</option>
 
 
                                 }
                                 else
                                 {
-                                    <option value="@item.CategoriaId">@item.Categorias.Nombre</option>
+                                    <option value="@item.CategoriaId">@item.Nombre</option>
                                 }
                             }
                         </select>
@@ -60,7 +60,7 @@
                     <div class="col-md-6">
                         <select id="ProductoId" name="ProductoId" class="ui search dropdown form-control">
                             <option value="">Productos...</option>
-                            @foreach (var item in Model.GetProductos)
+                            @*@foreach (var item in Model.GetProductos)
                             {
                                 if (Model.ProductoId > 0 && Model.ProductoId == item.ProductoId)
                                 {
@@ -72,7 +72,7 @@
                                 {
                                     <option value="@item.ProductoId">@item.Descripcion</option>
                                 }
-                            }
+                            }*@
                         </select>
                         @Html.ValidationMessageFor(model => model.ProductoId, "", new { @class = "text-danger" })
                     </div>
@@ -179,15 +179,29 @@
 
         });
 
-
+       
+        @*$("#CategoriaId").on("change", function () {
+            debugger;
+            var idPais = $(this).val();
+                 $("#ProductoId").empty();            
+                 $.getJSON("@Url.Action("GetProductos", "Ventas")", { CategoriaId: idPais }, function (data) {      
+                $.each(data, function () {
+                    $("#ProductoId").append($("<option>").val(this.ProductoId).text(this.Descripcion));
+                });                                           
+            });
+        });*@
+    
         $("#CategoriaId").change(function () {
             $("#ProductoId").empty();
+            debugger;
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("GetProductos")',
                 dataType: 'json',
                 data: { CategoriaId: $("#CategoriaId").val() },
+               
                 success: function (productos) {
+                    debugger;
                     $("#ProductoId").append('<option value="">Productos...</option>');
                     $.each(productos, function (i, producto) {
                         $("#ProductoId").append('<option value="'
@@ -197,7 +211,7 @@
                    
                 },
                 error: function (ex) {
-                    alert('Error al mostrar los departamentos.' + ex);
+                    alert('Error al mostrar los Productos.' + ex);
                 }
             });
         });

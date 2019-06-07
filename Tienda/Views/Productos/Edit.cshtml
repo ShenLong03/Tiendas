@@ -18,7 +18,6 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ProductoId)
-    @Html.HiddenFor(model => model.CategoriaId)
     @Html.HiddenFor(model => model.Foto)
 
 
@@ -43,7 +42,28 @@
             </div>
         </div>
     </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CategoriaId, "Categoria", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            <select id="CategoriaId" name="CategoriaId" class="ui search dropdown form-control">
+                <option value="">Categorias...</option>
+                @foreach (var item in Model.GetCategorias)
+                {
+                    if (Model.CategoriaId > 0 && Model.CategoriaId == item.CategoriaId)
+                    {
+                        <option value="@item.CategoriaId" selected>@item.Nombre</option>
 
+
+                    }
+                    else
+                    {
+                        <option value="@item.CategoriaId">@item.Nombre</option>
+                    }
+                }
+            </select>
+            @Html.ValidationMessageFor(model => model.CategoriaId, "", new { @class = "text-danger" })
+        </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(model => model.CodigoId, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">

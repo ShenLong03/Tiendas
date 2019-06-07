@@ -333,10 +333,31 @@ namespace Tienda.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Ventas ventas = await db.Ventas.FindAsync(id);
-            db.Ventas.Remove(ventas);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+           
+                Ventas ventas = await db.Ventas.FindAsync(id);
+            try
+            {
+                foreach (var item in ventas.DetalleVentas.ToList())
+            {
+                db.DetalleVentas.Remove(item);
+                await db.SaveChangesAsync();
+            }
+            foreach (var item in ventas.Pagos.ToList())
+            {
+                db.Pagos.Remove(item);
+                await db.SaveChangesAsync();
+            }
+          
+                db.Ventas.Remove(ventas);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "No puedes Borrar esta Factura porque tiene Detalles y Pagos ";
+                return View(ventas);
+            }
+            
         }
         #endregion
 
@@ -344,17 +365,17 @@ namespace Tienda.Controllers
         #region DetalleVenta
 
 
-        public async Task<JsonResult> GetProductos(int CategoriaId)
+        public  JsonResult GetProductos(int CategoriaId)
         {
             try
             {
                 db.Configuration.ProxyCreationEnabled = false;
-                var productos = new List<Productos>();
+               
 
 
              
-                productos = await db.Productos.Where(p => p.CategoriaId == CategoriaId).ToListAsync();
-                return Json(productos.OrderBy(p => p.ProductoId).ToList(), JsonRequestBehavior.AllowGet);
+               var productos =  db.Productos.Where(p => p.CategoriaId == CategoriaId).ToList();
+                return Json(productos, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -472,7 +493,7 @@ namespace Tienda.Controllers
                     VentaId = ventas.VentaId,
                     Precio = 15000,
                     Foto = Foto,
-                    GetProductos = db.Productos.ToList()
+                    GetCategorias = db.Categorias.ToList()
                 });
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }

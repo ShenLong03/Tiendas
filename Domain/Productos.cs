@@ -35,7 +35,7 @@ namespace Domain
         public string Foto { get; set; }
 
         [NotMapped]
-        public string FotoFull { get { return string.Concat(WebConfigurationManager.AppSettings["URL"], Foto.Substring(1)); } }
+        public string FotoFull { get { return !string.IsNullOrEmpty(Foto.Trim())? string.Concat(WebConfigurationManager.AppSettings["URL"], Foto.Substring(1)):string.Empty; } }
 
         public virtual ICollection<DetalleVentas> DetalleVentas { get; set; }
 

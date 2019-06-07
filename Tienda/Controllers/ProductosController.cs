@@ -164,7 +164,8 @@ namespace Tienda.Controllers
                 {
                     return HttpNotFound();
                 }
-                var detalleProducto = ToProductoView(productos); 
+                var detalleProducto = ToProductoView(productos);
+                detalleProducto.GetCategorias = db.Categorias.ToList();
                 return View(detalleProducto);
             }
             else { return RedirectToAction("Login", "Ventas", new { }); }
